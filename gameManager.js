@@ -9,14 +9,6 @@ class GameManager{
         this._gmPoints = []
         this._gmPlayer = new Player(this);
 
-        for(let i = 0; i < 2; i ++){
-            let p = new Point(this, this._gmPlayer)
-            let t = this._gameScreen.addElement(p.getVis())
-
-            this._gmPoints.push([t,p]);
-            this._gmPoints[i][1].setTicket(t);
-        }
-
         for(let i = 0; i < 20; i ++){
             let p = new Enemy(this, this._gmPlayer)
             let t = this._gameScreen.addElement(p.getVis())
@@ -61,19 +53,47 @@ class GameManager{
         }
     }
 
-    /*
-    drawInto(gl, program){
-        this._gmEnemies.forEach(x => x.drawInto(gl, program));
-        this._gmBullets.forEach(x => x.drawInto(gl, program));
-        this._gmPlayer.drawInto(gl, program);
-    } EN TEORIA NO CAL JA QUE ELS HI PASSEM A ENGINE*/ 
-
     addElementBullet(b){
         //Aquest l'hem de tenir aqui a causa que el GM es el que te el llistat de tots els enemics per triar el mes aprop
-        let t = this._gameScreen.addElement(b.getVis())
-        b.setTicket(t);
-        this._gmBullets.push([t,b]);
+        if(this._gmEnemies.length > 0){
+            //:( O(N) per obtenir quin element es el que esta mes aprop? sino com es faria per tenir un ranking.
+                /*
+                - Pot ser que es dispari una altre bala abans de que l'altre hagui impactat, si fan referencia al matiex, estara undefined quant l'altre l'elimini.
+                */
+            function distEnemy(e) {
+                let dX=b.getPos()[0] - e.getPos()[0];
+                let dY=b.getPos()[1] - e.getPos()[1];
+                return dX * dX + dY * dY;
+            }
 
+            let eMin = undefined;
+            let lMin = -1;
+            for(let i = 0; i < this._gmEnemies.length; i++){
+                if((!this._gmEnemies[i][1].isPursued() &&  distEnemy(this._gmEnemies[i][1]) < lMin) || eMin == undefined){
+                    eMin = this._gmEnemies[i][1];
+                    lMin = distEnemy(this._gmEnemies[i][1]);
+                }
+                console.log("A");
+            }
+
+            // Pot ser que no quedi cap enemic que pugi ser apuntat...
+            if(eMin != undefined){
+                let t = this._gameScreen.addElement(b.getVis());
+                b.setTicket(t);
+                this._gmBullets.push([t,b]);
+                
+                b.setEnemy(eMin);
+                eMin.setPursued();
+            }
+        }
+    }
+
+    addElementPoint(pos){
+            let p = new Point(this, this._gmPlayer,pos)
+            let t = this._gameScreen.addElement(p.getVis())
+
+            this._gmPoints.push([t,p]);
+            p.setTicket(t);
     }
 
     removeElement(vTicket,type){

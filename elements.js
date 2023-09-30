@@ -27,7 +27,7 @@ class BulletSpawner{
     }
 
     shootEnemy(){
-        this._bsGameManager.addElementBullet(new Bullet(this._bsGameManager)); //TODO COMPLETE
+        this._bsGameManager.addElementBullet(new Bullet(this._bsGameManager, this._bsPlayer)); //TODO COMPLETE
         console.log("SHOOTS FIRED");
     }
 
@@ -85,6 +85,7 @@ export class Player{
     setMousePos(vec){
         this._pMousePos = vec;
     }
+
     getPos(){
         return this._pPos;
     }
@@ -118,12 +119,14 @@ export class Player{
 }
 
 class Bullet{
-    constructor(ge){
+    constructor(ge, player){
         this._gameEngine = ge;
-        this._pPos = [0,0];
+        this._pPos = [player.getPos()[0],player.getPos()[1],0.0 ];
         this._pDir = [0,0];
         this._pVel = 0.01;
-        this._pVis = new EntityRegularPoligon(6,0.03);
+        this._pSize = 0.03;
+        this._pVis = new EntityRegularPoligon(6,this._pSize);
+        this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1] - (this._pSize)/2,0.0])
     }
 
     setEnemy(enemy){
@@ -134,8 +137,8 @@ class Bullet{
         this._pTicket = t;
     }
 
-    drawInto(gl, program){
-        this._pVis.drawInto(gl,program);
+    getPos(){
+        return this._pPos;
     }
     
     getVis(){
@@ -150,19 +153,26 @@ class Bullet{
 
     //Directament a enemic
     update(){
-        this._pDir[0] = this._pPos[0] - this._pEnemy.getPos()[0];
-        this._pDir[1] = this._pPos[1] - this._pEnemy.getPos()[1];
-        (this._pDir[0]*this._pDir[0] + this._pDir[1]*this._pDir[1]) > 0.01 ? this._pEnemy.destroy() : none;
+        this._pDir[0] = this._pEnemy.getPos()[0] - this._pPos[0];
+        this._pDir[1] = this._pEnemy.getPos()[1] - this._pPos[1];
+        // ? this._pEnemy.destroy() : none;
         
+        if((this._pDir[0]*this._pDir[0] + this._pDir[1]*this._pDir[1]) < 0.01){
+            this._pEnemy.destroy();
+            this.destroy();
+        }
+
         normalizeVector(this._pDir);
-        this._pPos[0] += this._pDir * this._pVel;
-        this._pPos[0] += this._pDir * this._pVel;
+        this._pPos[0] += this._pDir[0] * this._pVel;
+        this._pPos[1] += this._pDir[1] * this._pVel;
+
+        this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1]- (this._pSize)/2,0.0])
     }
 
 }
 
 export class Point{
-    constructor(ge, player){
+    constructor(ge, player,sPos){
         this._gameEngine = ge;
         this._pPlayer = player;
         this._pTicket = undefined;
@@ -171,7 +181,7 @@ export class Point{
         this._pTurningVel = 0.8;
         this._pRealVect = [0,0];
         this._pApunVect = [0,0];
-        this._pPos = [Math.random()*2 - 1,Math.random()*2 - 1,0];
+        this._pPos = sPos;
         this._pVel = 0.02;
         this._pSize = 0.02;
         this._pWidth = 0.015;
@@ -234,6 +244,15 @@ export class Enemy{
         this._pVel = 0.005;
         this._pPlayer = player; 
         this._pVis.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
+        this._pPursuedBullet = false;
+    }
+
+    setPursued(){
+        this._pPursuedBullet= true;
+    }
+
+    isPursued(){
+        return this._pPursuedBullet;
     }
 
     getVis(){
@@ -277,6 +296,11 @@ export class Enemy{
     }
 
     destroy(){
+
+        if(Math.random() > 0.5){
+            this._gameEngine.addElementPoint([this._pPos[0],this._pPos[1], 0.0]);
+        }
+
         if(this._pTicket == undefined)
             alert("Eliminant un element que no s'està mostrant per pantalla");
         else this._gameEngine.removeElement(this._pTicket,"Enemies");
