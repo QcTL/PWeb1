@@ -85,11 +85,12 @@ class EntityProperties{
             this._pColor = properties.color     != undefined ? properties.color     : [0.0,0.0,0.0,1.0];
             this._pSize = properties.size       != undefined ? properties.size      : 1;
             this._pOffset = properties.offset   != undefined ? properties.offset    : [0.0,0.0,0.0];
+            this._pFlip = properties.flip     != undefined ? properties.flip    : 0;
         }else{
             this._pColor = [0.0,0.0,0.0,1.0];
             this._pSize = 1;
             this._pOffset = [0.0,0.0,0.0];
-        
+            this._pFlip = 0;
         }
     }
     
@@ -104,6 +105,9 @@ class EntityProperties{
             case "pOffset":
                 this._pOffset = vProperty;
                 break;
+            case "pFlip":
+                this._pFlip = vProperty;
+                break;
             default:
                 break;
         }
@@ -113,12 +117,14 @@ class EntityProperties{
         this._sColor = gl.getUniformLocation(program,"pColor")
         this._sSize = gl.getUniformLocation(program,"pSize")
         this._sOffset = gl.getUniformLocation(program,"pOffset")
+        this._sFlip = gl.getUniformLocation(program,"pFlip")
     }
 
     displayProperty(gl){
         gl.uniform4fv(this._sColor, this._pColor);    
         //gl.uniform1fv(this._sSize, this._pSize);
         gl.uniform3fv(this._sOffset, this._pOffset);
+        gl.uniform1i(this._sFlip, this._pFlip ? 1 : 0);
     }
     
 }
@@ -141,13 +147,15 @@ export class EntitySprite extends EntityProperties{
             alert("Back to the drawing board!");
         }
         let nIn = 0;
+        let halfX = width*this._pSize/2;
+        let halfY = height*this._pSize/2;
         for(let i = 0; i < height; i ++){
             for(let j = 0; j < width; j ++){
                 if(cVertexPoints[j + i * height] == 1){
-                    this.rVertices.push((width - j)*this._pSize,(height - i)*this._pSize-this._pSize,0.0);
-                    this.rVertices.push((width - j)*this._pSize,(height - i)*this._pSize,0.0);
-                    this.rVertices.push((width - j)*this._pSize+this._pSize,(height - i)*this._pSize,0.0);
-                    this.rVertices.push((width - j)*this._pSize+this._pSize,(height - i)*this._pSize-this._pSize,0.0);
+                    this.rVertices.push((width - j)*this._pSize - halfX,(height - i)*this._pSize-this._pSize - halfY,0.0);
+                    this.rVertices.push((width - j)*this._pSize - halfX,(height - i)*this._pSize - halfY,0.0);
+                    this.rVertices.push((width - j)*this._pSize+this._pSize - halfX,(height - i)*this._pSize - halfY ,0.0);
+                    this.rVertices.push((width - j)*this._pSize+this._pSize - halfX,(height - i)*this._pSize-this._pSize - halfY,0.0);
                     this.rIndices.push(nIn,nIn+1,nIn+3,nIn+1, nIn+2, nIn+3);
                     nIn += 4;
                 }

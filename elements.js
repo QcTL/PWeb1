@@ -139,8 +139,8 @@ export class Player extends BaseEntity{
 
         normalizeVector(this._pApunVect);
         normalizeVector(this._pRealVect);
-        
-        this._pVis.setProperty("pOffset", [this._pPos[0] - (this._sPA*this._sPS)/2,this._pPos[1]- (this._sPA*this._sPS)/2,0.0])
+        this._pVis.setProperty("pFlip", this._pRealVect[0] < -0.1 );
+        this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0])
     }
 }
 
@@ -288,7 +288,7 @@ export class Enemy extends BaseEntity{
         this._pPursuedBullet = false;
 
         this._pVis.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
-        this._pVis.setProperty("pOffset", [this._pPos[0] - (3*0.03)/2,this._pPos[1]- (3*0.03)/2,0.0]);
+        this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0]);
     }
 
     setPursued(){
@@ -320,7 +320,9 @@ export class Enemy extends BaseEntity{
         this._pApunVect[1] = this._pPlayer.getPos()[1] - this._pPos[1];
         normalizeVector(this._pApunVect);
         normalizeVector(this._pRealVect);
-        this._pVis.setProperty("pOffset", [this._pPos[0] - (3*0.03)/2,this._pPos[1]- (3*0.03)/2,0.0]);
+
+        this._pVis.setProperty("pFlip", this._pRealVect[0] < -0.1 );
+        this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0]);
     }
 
     destroy(){

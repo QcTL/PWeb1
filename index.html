@@ -15,10 +15,11 @@
       
       in vec3 VertexPosition;
       uniform vec3 pOffset;
+      uniform bool pFlip;
 
       void main()  {
-
-        gl_Position = vec4 (VertexPosition + pOffset, 1.0);
+        vec3 flippedPosition = pFlip ? vec3(-VertexPosition.x, VertexPosition.y, VertexPosition.z) : VertexPosition;
+        gl_Position = vec4(flippedPosition + pOffset, 1.0);
 
       }
     
