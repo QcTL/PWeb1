@@ -7,11 +7,18 @@ export class HordeSpawner{
         this._hsSpawnRate = 1000;
         this._hsWhileSpawning = true;
         this._hsNSpawn = 2;
+        this._hsPause = false;
         this.recursiveSpawning();
     }
 
+    setPause(v){
+        this._hsPause = v;
+    }
+
     recursiveSpawning(){
-        for(let i = 0; i < this._hsNSpawn; i += 1){this.spawnEnemy();}
+        for(let i = 0; i < this._hsNSpawn; i += 1){
+            if(!this._hsPause)
+                this.spawnEnemy();}
         if(this._hsWhileSpawning)
             setTimeout(()=> this.recursiveSpawning(),this._hsSpawnRate);
     }

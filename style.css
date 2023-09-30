@@ -45,4 +45,18 @@ canvas{
     left: 0px;
     top: 0px;
     z-index: 10;
+ 
+}
+
+
+#gCanvasText{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+ 
+}
+
+.CanvasPause{
+    background-color: rgba(0,0,0,.5);
 }
