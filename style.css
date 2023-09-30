@@ -1,0 +1,38 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+    color: #fbf5ef;
+}
+body{
+    background-color: #1f102a;
+}
+
+h1{
+    font-size: 2.5em;
+}
+
+h3{
+    font-size: 2em;
+}
+
+p{
+    font-size: 1.5em;
+}
+
+canvas{
+    background-color: black;
+    border-radius: 20px;
+}
+
+.cElem{
+    display: flex;
+    justify-content: center;
+}
+
+.cInforme{
+    width: 80vw;
+    background-color: #390947;
+    margin-top: 20px;
+    border-radius: 20px;
+    padding: 20px;
+    padding-left: 30px;
+}
