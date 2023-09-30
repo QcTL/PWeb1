@@ -1,6 +1,6 @@
 import { Enemy, Player, Point } from "./elements.js";
 import { GameScreen } from "./mGame.js";
-import { HordeSpawner } from "./mecanics.js";
+import { HordeSpawner, PointCounter, Timer } from "./mecanics.js";
 class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 
@@ -24,14 +24,22 @@ class GameManager{
         this._gamePaused = false;
 
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
+       
+
+        this._mecTi = new Timer(this,1000);
+        this._mecTi.startTimer();
+    
+        this._mecPc = new PointCounter(this,1000);
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
     }
 
     swapPauseGame(e){
-        if(e.key == 'p') 
+        if(e.key == 'p'){
             this._gamePaused = !this._gamePaused;
+            this._mecTi.swapPause();
+        }
     }
 
     isInsideAny(pX,pY, pSelf){
@@ -112,11 +120,13 @@ class GameManager{
         let lList = undefined;
 
         if(type == "Enemies")
-            lList = this._gmEnemies
+            lList = this._gmEnemies;
         else if(type == "Bullets")
-            lList = this._gmBullets
-        else if(type == "Points")
-            lList = this._gmPoints
+            lList = this._gmBullets;
+        else if(type == "Points"){
+            lList = this._gmPoints;
+            this._mecPc.reducePoint();
+        }
 
         for(let i = 0; i < lList.length; i++){
             if(lList[i][0] == vTicket){

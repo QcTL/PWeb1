@@ -41,3 +41,72 @@ function randomIntInterval(min, max){
 function randomDeciInterval(min, max){
     return Math.random()* (max - min) + min;
 }
+
+export class PointCounter{
+    constructor(gm) {
+        this._pcGameManager = gm;
+        this._pcCanvas = document.querySelector("#gCanvasText");
+        this._pcCtx = this._pcCanvas.getContext("2d");
+        this._pcPointsToNext = 10;
+        this.showPoints()
+    }
+
+    showPoints() {
+        this._pcCtx.clearRect(0, 65, 1000, 200);
+        this._pcCtx.font = 'bold 2em Montserrat';
+        this._pcCtx.fillStyle = 'white';
+        this._pcCtx.fillText(this._pcPointsToNext, 10, 100);
+    }
+
+    reducePoint(){
+        this._pcPointsToNext -= 1;
+        this.showPoints();
+    }
+}
+
+export class Timer{
+    constructor(gm, tSeconds) {
+        this._tGameManager = gm;
+        this._tTotalSeconds = tSeconds;
+        this._tCanvas = document.querySelector("#gCanvasText");
+        this._tCtx = this._tCanvas.getContext("2d");
+        this._tPaused = false;
+        this.updateTimer(); 
+      }
+    
+      startTimer() {
+        this._tintId = setInterval(this.updateTimer.bind(this), 1000);
+      }
+      
+      swapPause(){
+        this._tPaused = ! this._tPaused;
+      }
+
+      updateTimer() {
+        console.log(this._tTotalSeconds );
+        if (!this._tPaused && this._tTotalSeconds > 0) {
+            this._tTotalSeconds--;
+            const minutes = Math.floor(this._tTotalSeconds / 60);
+            const seconds = this._tTotalSeconds % 60;
+            const formattedTime = this._padZero(minutes) + ':' + this._padZero(seconds);
+        
+            this.drawText(formattedTime);
+        } else if(this._tTotalSeconds < 0) {
+          clearInterval(this._tintId);
+          console.log('Timer finished!');
+        }
+      }
+    
+      drawText(text) {
+        console.log("TIO ACTUALIZATE COJONES ")
+        this._tCtx.clearRect(0, 0, 1000, 75);
+        this._tCtx.font = 'bold 4em Montserrat';
+        this._tCtx.fillStyle = 'white';
+        this._tCtx.fillText(text, 10, 60);
+      }
+    
+      _padZero(num) {
+        return (num < 10 ? '0' : '') + num;
+      }
+      
+}

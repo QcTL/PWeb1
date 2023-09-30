@@ -19,7 +19,6 @@ p{
 }
 
 canvas{
-    background-color: black;
     border-radius: 20px;
 }
 
@@ -35,4 +34,15 @@ canvas{
     border-radius: 20px;
     padding: 20px;
     padding-left: 30px;
+}
+
+.container {
+    position: relative;
+}
+ 
+#gCanvasText {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
 }

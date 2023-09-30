@@ -2,7 +2,7 @@ import { EntityOutLine, EntityRegularPoligon, EntitySprite } from "./mGame.js"
 
 class PlayerController{
     constructor(parent){
-        this.gCanvas = document.getElementById("gCanvas");
+        this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");
         this.gParent = parent;
 
@@ -17,7 +17,7 @@ class PlayerController{
 
 class BulletSpawner{
     constructor(parent, gm){
-        this._bsFireRate = 5000;
+        this._bsFireRate = 500;
         this._bsNFired = 1;
         this._bsLifeBullet = 1; //How many enemies does a single bullet kill
 

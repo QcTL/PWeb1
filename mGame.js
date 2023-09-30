@@ -74,6 +74,10 @@ export class GameScreen{
             }
         }
     }
+
+    getGl(){
+        return this.gl;
+    }
 }
 
 class EntityProperties{
