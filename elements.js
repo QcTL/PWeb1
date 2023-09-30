@@ -38,7 +38,6 @@ class BulletSpawner{
     }
 }
 
-
 class BaseEntity{
     constructor(ge, IPos, IRealVect, IApunVect, IVis, ITopVel, ITurnVel){
         this._gameEngine = ge;
@@ -251,14 +250,15 @@ export class Point{
 }
 
 export class Enemy extends BaseEntity{
-    constructor(ge, player){
-        super(ge,[Math.random()*2 - 1,Math.random()*2 - 1,0],[0,0],[0,0],new EntitySprite([0,1,0,1,1,1,0,1,0],3,3,0.03),1,0.5)
+    constructor(ge, player, pos = undefined){
+        let tPos = pos != undefined ? pos: [Math.random()*2 - 1,Math.random()*2 - 1,0]
+        super(ge,tPos,[0,0],[0,0],new EntitySprite([0,1,0,1,1,1,0,1,0],3,3,0.03),1,0.5)
         this._pVel = 0.005;
         this._pPlayer = player; 
         this._pPursuedBullet = false;
 
         this._pVis.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
-        
+        this._pVis.setProperty("pOffset", [this._pPos[0] - (3*0.03)/2,this._pPos[1]- (3*0.03)/2,0.0]);
     }
 
     setPursued(){
@@ -290,7 +290,7 @@ export class Enemy extends BaseEntity{
         this._pApunVect[1] = this._pPlayer.getPos()[1] - this._pPos[1];
         normalizeVector(this._pApunVect);
         normalizeVector(this._pRealVect);
-        this._pVis.setProperty("pOffset", [this._pPos[0] - (3*0.03)/2,this._pPos[1]- (3*0.03)/2,0.0])
+        this._pVis.setProperty("pOffset", [this._pPos[0] - (3*0.03)/2,this._pPos[1]- (3*0.03)/2,0.0]);
     }
 
     destroy(){
@@ -304,7 +304,6 @@ export class Enemy extends BaseEntity{
         else this._gameEngine.removeElement(this._pTicket,"Enemies");
     }
 }
-
 
 function normalizeVector(vect){
     const mag = Math.sqrt(vect[0]*vect[0] + vect[1]*vect[1]);

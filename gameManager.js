@@ -1,5 +1,6 @@
 import { Enemy, Player, Point } from "./elements.js";
 import { GameScreen } from "./mGame.js";
+import { HordeSpawner } from "./mecanics.js";
 class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 
@@ -9,7 +10,7 @@ class GameManager{
         this._gmPoints = []
         this._gmPlayer = new Player(this);
 
-        for(let i = 0; i < 20; i ++){
+        for(let i = 0; i < -1; i ++){
             let p = new Enemy(this, this._gmPlayer)
             let t = this._gameScreen.addElement(p.getVis())
 
@@ -21,6 +22,8 @@ class GameManager{
 
         this._gmGameLoop = true;
         this._gamePaused = false;
+
+        this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
@@ -89,11 +92,19 @@ class GameManager{
     }
 
     addElementPoint(pos){
-            let p = new Point(this, this._gmPlayer,pos)
-            let t = this._gameScreen.addElement(p.getVis())
+        let p = new Point(this, this._gmPlayer,pos)
+        let t = this._gameScreen.addElement(p.getVis())
 
-            this._gmPoints.push([t,p]);
-            p.setTicket(t);
+        this._gmPoints.push([t,p]);
+        p.setTicket(t);
+    }
+
+    addElementEnemy(diff, pos){
+        let p = new Enemy(this, this._gmPlayer,pos)
+        let t = this._gameScreen.addElement(p.getVis())
+
+        this._gmEnemies.push([t,p]);
+        p.setTicket(t);
     }
 
     removeElement(vTicket,type){
