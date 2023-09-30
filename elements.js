@@ -38,15 +38,38 @@ class BulletSpawner{
     }
 }
 
-export class Player{
-    constructor(ge){
+
+class BaseEntity{
+    constructor(ge, IPos, IRealVect, IApunVect, IVis, ITopVel, ITurnVel){
         this._gameEngine = ge;
-        this._pPos = [0,0,0];
-        this._pRealVect = [0,0];
-        this._pApunVect = [0,0];
-        this._sPA = 16
-        this._sPS = 0.01
-        this._pVis = new EntitySprite(
+        this._pPos = IPos;
+        this._pRealVect = IRealVect;
+        this._pApunVect = IApunVect;
+        this._pVis = IVis;
+        this._pTopVel = ITopVel;
+        this._pTurningVel = ITurnVel;
+    }
+
+
+    getVis(){
+        return this._pVis;
+    }
+
+    getPos(){
+        return this._pPos;
+    }
+
+    
+    setTicket(t){
+        this._pTicket = t;
+    }
+}
+
+export class Player extends BaseEntity{
+    constructor(ge){
+        let _sPA = 16
+        let _sPS = 0.01
+        super(ge,[0,0,0], [0,0], [0,0],new EntitySprite(
             [0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,
              0,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1,
              0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,
@@ -62,33 +85,27 @@ export class Player{
              0,1,1,0,0,1,1,0,0,0,1,1,1,0,0,0,
              0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,
              0,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,
-             0,0,1,0,0,0,1,1,0,0,1,1,0,0,0,0],this._sPA,this._sPA,this._sPS);
+             0,0,1,0,0,0,1,1,0,0,1,1,0,0,0,0],_sPA,_sPA,_sPS),
+             0.01);
+
+        this._sPA = _sPA;
+        this._sPS = _sPS;
         this._pTurningVel = 0.5;
-        this._pTopVel = 0.01;
         this._pCurVel = 1;
         this._pMousePos = [0,0];
-
 
         this._pPlayerController = new PlayerController(this);
         this._pPlayerBulletSpawner = new BulletSpawner(this, ge);
         this._pPlayerBulletSpawner.recursiveShooting();
 
         this._pVis.setProperty("pColor",[0.4824,0.3294,0.502,1.0]);
-
-
     }
 
-    getVis(){
-        return this._pVis;
-    }
 
     setMousePos(vec){
         this._pMousePos = vec;
     }
 
-    getPos(){
-        return this._pPos;
-    }
 
     addPoint(){
         //A
@@ -233,18 +250,15 @@ export class Point{
     }
 }
 
-export class Enemy{
+export class Enemy extends BaseEntity{
     constructor(ge, player){
-        this._gameEngine = ge;
-        this._pPos = [Math.random()*2 - 1,Math.random()*2 - 1,0];
-        this._pRealVect = [0,0];
-        this._pApunVect = [0,0];
-        this._pVis = new EntitySprite([0,1,0,1,1,1,0,1,0],3,3,0.03);
-        this._pTurningVel = 0.5;
+        super(ge,[Math.random()*2 - 1,Math.random()*2 - 1,0],[0,0],[0,0],new EntitySprite([0,1,0,1,1,1,0,1,0],3,3,0.03),1,0.5)
         this._pVel = 0.005;
         this._pPlayer = player; 
-        this._pVis.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
         this._pPursuedBullet = false;
+
+        this._pVis.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
+        
     }
 
     setPursued(){
@@ -254,19 +268,7 @@ export class Enemy{
     isPursued(){
         return this._pPursuedBullet;
     }
-
-    getVis(){
-        return this._pVis;
-    }
-
-    drawInto(gl, program){
-        this._pVis.drawInto(gl,program);
-    }
-
-    getPos(){
-        return this._pPos;
-    }
-
+ 
     getSize(){
         return 0.10;
     }
@@ -289,10 +291,6 @@ export class Enemy{
         normalizeVector(this._pApunVect);
         normalizeVector(this._pRealVect);
         this._pVis.setProperty("pOffset", [this._pPos[0] - (3*0.03)/2,this._pPos[1]- (3*0.03)/2,0.0])
-    }
-
-    setTicket(t){
-        this._pTicket = t;
     }
 
     destroy(){
