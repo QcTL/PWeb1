@@ -24,6 +24,7 @@ class BulletSpawner{
         this._bsIsShooting = true;
         this._bsGameManager = gm;
         this._bsPlayer = parent;
+        this._bsPause = false;
     }
 
     shootEnemy(){
@@ -31,8 +32,15 @@ class BulletSpawner{
         console.log("SHOOTS FIRED");
     }
 
+    setPause(v){
+        this._bsPause = v;
+    }
+
     recursiveShooting(){
-        for(let i = 0; i < this._bsNFired; i += 1){this.shootEnemy();}
+        for(let i = 0; i < this._bsNFired; i += 1){
+            if(!this._bsPause)
+                this.shootEnemy();
+        }
         if(this._bsIsShooting)
             setTimeout(()=> this.recursiveShooting(),this._bsFireRate);
     }
@@ -100,6 +108,9 @@ export class Player extends BaseEntity{
         this._pVis.setProperty("pColor",[0.4824,0.3294,0.502,1.0]);
     }
 
+    setPause(v){
+        this._pPlayerBulletSpawner.setPause(v);
+    }
 
     setMousePos(vec){
         this._pMousePos = vec;
@@ -128,8 +139,7 @@ export class Player extends BaseEntity{
 
         normalizeVector(this._pApunVect);
         normalizeVector(this._pRealVect);
-
-        //this._pVis.setProperty("pOffset", this._pPos)
+        
         this._pVis.setProperty("pOffset", [this._pPos[0] - (this._sPA*this._sPS)/2,this._pPos[1]- (this._sPA*this._sPS)/2,0.0])
     }
 }
@@ -282,7 +292,7 @@ export class Enemy extends BaseEntity{
     }
 
     setPursued(){
-        this._pPursuedBullet= true;
+        this._pPursuedBullet = true;
     }
 
     isPursued(){
@@ -316,7 +326,7 @@ export class Enemy extends BaseEntity{
     destroy(){
 
         if(Math.random() > 0.5){
-            this._gameEngine.addElementPoint([this._pPos[0],this._pPos[1], 0.0]);
+            this._gameEngine.addElementPoint([this._pPos[0],this._pPos[1], -0.1]);
         }
 
         if(this._pTicket == undefined)

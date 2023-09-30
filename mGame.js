@@ -47,7 +47,6 @@ export class GameScreen{
 
     mainLoop(){
         this.gl.clearColor(this._bkgnColor[0],this._bkgnColor[1],this._bkgnColor[2],this._bkgnColor[3]);
-        //requestAnimationFrame(this.drawSceneLoop.bind(this));
     }
 
     drawSceneLoop(){
@@ -164,7 +163,6 @@ export class EntitySprite extends EntityProperties{
         this.idBufferIndixes = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.idBufferIndixes);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.rIndices),gl.STATIC_DRAW);
-        // FALTA INICIALITZAR EL ALTRE
     }
 
 
@@ -178,8 +176,7 @@ export class EntitySprite extends EntityProperties{
     }
 
     compactVertex(){
-        //En comptes de tenir que cada pixel sigui en sí un quadrat, podem veure si un 3x3 són quadrats i fer un que agrupi aquests 3.
-             
+        //En comptes de tenir que cada pixel sigui en sí un quadrat, podem veure si un 3x3 són quadrats i fer un que agrupi aquests 3.       
     }
 
     update(){
@@ -249,7 +246,6 @@ export class EntityOutLine extends EntityProperties{
         this.displayProperty(gl);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.idBufferVertices);
         gl.vertexAttribPointer(program.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-            //Si tingués indexes aniria aquí.
         gl.drawArrays(gl.TRIANGLES, 0, this.rVertices.length/3);
     }
 }

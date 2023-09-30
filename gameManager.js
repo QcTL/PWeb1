@@ -38,6 +38,7 @@ class GameManager{
     swapPauseGame(e){
         if(e.key == 'p'){
             this._gamePaused = !this._gamePaused;
+            this._gmPlayer.setPause(this._gamePaused);
             this._mecTi.swapPause();
         }
     }
