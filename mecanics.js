@@ -50,11 +50,13 @@ function randomDeciInterval(min, max){
 }
 
 export class PointCounter{
-    constructor(gm) {
+    constructor(gm,lvlProg) {
+        this._lvlProg = lvlProg;
         this._pcGameManager = gm;
         this._pcCanvas = document.querySelector("#gCanvasText");
         this._pcCtx = this._pcCanvas.getContext("2d");
-        this._pcPointsToNext = 10;
+        this._pcPointsToNext = this._lvlProg [0];
+        this._pcIndexProg = 1;
         this.showPoints()
     }
 
@@ -67,6 +69,10 @@ export class PointCounter{
 
     reducePoint(){
         this._pcPointsToNext -= 1;
+        if(this._pcPointsToNext <= 0){
+            this._pcPointsToNext = this._lvlProg [this._pcIndexProg];
+            this._pcIndexProg += 1;
+        }
         this.showPoints();
     }
 }

@@ -4,7 +4,9 @@ import { HordeSpawner, PointCounter, Timer } from "./mecanics.js";
 class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 
-    
+
+        this._lvlProgression = [10,25,50,100,150,250,350,450];
+
         this._gmEnemies = []
         this._gmBullets = []
         this._gmPoints = []
@@ -18,18 +20,19 @@ class GameManager{
             this._gmEnemies[i][1].setTicket(t);
         }      
         
+
+
         this._gameScreen.addElement(this._gmPlayer.getVis());
 
         this._gmGameLoop = true;
         this._gamePaused = false;
 
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
-       
 
         this._mecTi = new Timer(this,1000);
         this._mecTi.startTimer();
     
-        this._mecPc = new PointCounter(this,1000);
+        this._mecPc = new PointCounter(this,this._lvlProgression);
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
