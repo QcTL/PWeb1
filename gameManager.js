@@ -1,6 +1,6 @@
 import { Enemy, Player, Point } from "./elements.js";
 import { GameScreen } from "./mGame.js";
-import { HordeSpawner, PointCounter, Timer } from "./mecanics.js";
+import { CardSelector, HordeSpawner, InputManager, LifeCounter, PointCounter, Timer } from "./mecanics.js";
 class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 
@@ -29,10 +29,17 @@ class GameManager{
 
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
 
+        //GUI
         this._mecTi = new Timer(this,1000);
         this._mecTi.startTimer();
-    
         this._mecPc = new PointCounter(this,this._lvlProgression);
+        this._mecLc = new LifeCounter(this);
+        this._gmPlayer.setDamageLabel(this._mecLc);
+        
+        
+        this._mecCs = new CardSelector(this);
+
+        this._mecIM = new InputManager(this, this._gmPlayer.getController(), this._mecCs.getController());
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);

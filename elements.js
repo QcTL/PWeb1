@@ -1,19 +1,5 @@
 import { EntityOutLine, EntityRegularPoligon, EntitySprite } from "./mGame.js"
-
-class PlayerController{
-    constructor(parent){
-        this.gCanvas = document.getElementById("gCanvasText");
-        const ctx = this.gCanvas.getContext("2d");
-        this.gParent = parent;
-
-        this.gCanvas.addEventListener('mousemove', this.mouseMoved.bind(this));
-    }
-
-    mouseMoved(event){
-        const rectGCanvas = this.gCanvas.getBoundingClientRect();
-        this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
-    }
-}
+import { PlayerController } from "./mecanics.js";
 
 class BulletSpawner{
     constructor(parent, gm){
@@ -106,6 +92,12 @@ export class Player extends BaseEntity{
         this._pPlayerBulletSpawner.recursiveShooting();
 
         this._pVis.setProperty("pColor",[0.4824,0.3294,0.502,1.0]);
+
+        this._pLife = 100;
+    }
+
+    getController(){
+        return this._pPlayerController;
     }
 
     setPause(v){
@@ -116,6 +108,17 @@ export class Player extends BaseEntity{
         this._pMousePos = vec;
     }
 
+
+    //LIFE
+    tickDamage(){
+        this._pLife -= 1;
+        this._pDamageLabel.changeValue(this._pLife);
+    }
+
+    setDamageLabel(dL){
+        this._pDamageLabel = dL;
+    }
+    //END LIFE
 
     addPoint(){
         //A

@@ -1,3 +1,5 @@
+import { Card } from "./card.js";
+
 export class HordeSpawner{
     constructor(gm, player, distanceK){
         this._hsDistK = distanceK;
@@ -112,7 +114,7 @@ export class Timer{
     
       drawText(text) {
         console.log("TIO ACTUALIZATE COJONES ")
-        this._tCtx.clearRect(0, 0, 1000, 75);
+        this._tCtx.clearRect(0, 0, 500, 75);
         this._tCtx.font = 'bold 4em Montserrat';
         this._tCtx.fillStyle = 'white';
         this._tCtx.fillText(text, 10, 60);
@@ -122,4 +124,162 @@ export class Timer{
         return (num < 10 ? '0' : '') + num;
       }
       
+}
+
+export class LifeCounter{
+    constructor(gm) {
+        this._pcGameManager = gm;
+        this._pcCanvas = document.querySelector("#gCanvasText");
+        this._pcCtx = this._pcCanvas.getContext("2d");
+        this._pcValue = 100;
+        this.showPoints()
+    }
+
+    showPoints() {
+        this._pcCtx.clearRect(0, 65, 1000, 200); //TODO Canviar
+        this._pcCtx.font = 'bold 4em Montserrat';
+        this._pcCtx.fillStyle = 'white';
+        this._pcCtx.fillText(this._pcValue, 850, 60);
+    }
+
+    changeValue(v){
+        this.this._pcValue = v;
+        this.showPoints();
+    }
+}
+
+
+
+export class CardSelector{
+    constructor(gm) {
+        this._csGameManager = gm;
+
+        this._csListCards = [new Card(gm,0),new Card(gm,1),new Card(gm,2)];
+        this._csListTickets = [];
+
+        this._csCardController = new CardController();
+
+        this._csIsActive = false;
+        this._csMousePosition = [0.0,0.0];
+    }
+
+    getController(){
+        return this._csCardController;
+    }
+
+    setMousePos(v){
+        this._csMousePosition = v;
+    }
+
+    setClickPos(v){
+        this._csActiveCard = this._csListCards.find(x=> x.isPointInside(v));
+        this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
+    }
+
+    displayCards(gs){
+        this._csListCards.forEach(
+            x => {
+                this._csListCards.push(gs.addElement(p.getVisBack()));
+                this._csListCards.push(gs.addElement(p.getVisLines()));
+                this._csListCards.push(gs.addElement(p.getVisElement()));
+            });
+        this._csIsActive = true; 
+    }
+
+    removeCards(gs){
+        this._csListTickets.forEach(x => gs.removeElement(x));
+        this._csIsActive = false; 
+    }
+
+    update(){
+        if(this._csIsActive){
+            //Animacio Carta:
+            this._csListCards.forEach(x => {if(x.isPointInside(this._csMousePosition)) x.setActive(); else x.setOff();}); 
+                //Es podria optimitzar, comprovar si es dins o estas actiu, i si ho estas torna a comprovar per si hauries de deixar-ho d'estar
+        }
+    }
+
+}
+
+/* INPUT MANAGER */
+export const TYPES_INPUT = {
+    CHAR_CONTROLLER: 'charController',
+    CARD_SELECTOR: 'cardSelector',
+};
+
+export class InputManager{
+
+    constructor(gm, pController, cController){
+        this._imCurrentInput = TYPES_INPUT.CHAR_CONTROLLER;
+    
+        this._imPController = pController;
+        this._imCController = cController;
+        this._imGameManager = gm;
+
+        this.askSwapInputManager(TYPES_INPUT.CHAR_CONTROLLER)
+    }
+
+    askSwapInputManager(newType){
+        if(newType == TYPES_INPUT.CHAR_CONTROLLER || newType == TypeError.CARD_SELECTOR){
+            this._imCurrentInput = newType;
+        }
+
+        if(newType == TYPES_INPUT.CHAR_CONTROLLER ){
+            this._imPController.turnOnController();
+            this._imCController.turnOffController();
+        }else{
+            this._imPController.turnOffController();
+            this._imCController.turnOnController();
+        }
+    }
+
+}
+
+export class CardController{
+    constructor(parent){
+        this.gCanvas = document.getElementById("gCanvasText");
+        const ctx = this.gCanvas.getContext("2d");
+        this.gParent = parent;
+    }
+
+    turnOffController(){
+        this.gCanvas.removeEventListener('mousemove', this.mouseMoved.bind(this));
+        this.gCanvas.removeEventListener('click', this.mouseClicked.bind(this));
+    }
+
+    turnOnController(){
+        this.gCanvas.addEventListener('mousemove', this.mouseMoved.bind(this));
+        this.gCanvas.addEventListener('click', this.mouseClicked.bind(this));
+    }
+
+    mouseMoved(event){
+        const rectGCanvas = this.gCanvas.getBoundingClientRect();
+        this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
+    }
+
+    mouseClicked(event) {
+        const rectGCanvas = this.gCanvas.getBoundingClientRect();
+        this.gParent.setClickPos([((event.clientX - rectGCanvas.left) / rectGCanvas.width * 2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top) / rectGCanvas.height * 2) - 1]);
+    }
+}
+
+export class PlayerController{
+    constructor(parent){
+        this.gCanvas = document.getElementById("gCanvasText");
+        const ctx = this.gCanvas.getContext("2d");
+        this.gParent = parent;
+    }
+
+    turnOffController(){
+        this.gCanvas.removeEventListener('mousemove', this.mouseMoved.bind(this));
+    }
+
+    turnOnController(){
+        this.gCanvas.addEventListener('mousemove', this.mouseMoved.bind(this));
+    }
+
+    mouseMoved(event){
+        const rectGCanvas = this.gCanvas.getBoundingClientRect();
+        this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
+    }
 }
