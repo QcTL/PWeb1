@@ -1,5 +1,5 @@
-import { EntityOutLine, EntityRegularPoligon, EntitySprite } from "./mGame.js"
-import { PlayerController } from "./mecanics.js";
+import { EntityOutLine, EntityRegularPoligon, EntitySprite } from "./GameEngine.js"
+import { PlayerController } from "./MecanicObjects.js";
 
 class BulletSpawner{
     constructor(parent, gm){

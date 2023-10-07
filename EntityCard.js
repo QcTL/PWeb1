@@ -1,4 +1,4 @@
-import { EntityLineStrip, EntityOutLine } from "./mGame.js";
+import { EntityLineStrip, EntityOutLine } from "./GameEngine.js";
 
 export class Card{
     constructor(ge, i){

@@ -1,4 +1,4 @@
-import { Card } from "./card.js";
+import { Card } from "./EntityCard.js";
 
 export class HordeSpawner{
     constructor(gm, player, distanceK){
