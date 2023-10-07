@@ -110,8 +110,11 @@ export class Player extends BaseEntity{
 
     //LIFE
     tickDamage(){
-        this._pLife -= 1;
+        this._pLife -= 25;
         this._pDamageLabel.changeValue(this._pLife);
+        if(this._pLife <= 0){
+            this._gameEngine.endGame(undefined);
+        }
     }
 
     setDamageLabel(dL){

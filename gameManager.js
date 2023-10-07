@@ -27,6 +27,7 @@ class GameManager{
         this._gmGameLoop = true;
         this._gamePaused = false;
         this._gameSelectingCards = false;
+        this._gameEnd = false;
 
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
 
@@ -44,6 +45,11 @@ class GameManager{
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
+    }
+
+    endGame(){
+        this._gameEnd = true;
+        this.swapPauseGame(undefined);
     }
 
     startCardSelection(){
@@ -64,7 +70,7 @@ class GameManager{
 
 
     swapPauseGame(e){
-        if((e != undefined && e.key == 'p') || this._gameSelectingCards){
+        if((e != undefined && e.key == 'p' && !this._gameEnd) || this._gameSelectingCards || this._gameEnd){
             this._gamePaused = !this._gamePaused;
             this._gmPlayer.setPause(this._gamePaused);
             this._mecHS.setPause(this._gamePaused)
@@ -91,7 +97,7 @@ class GameManager{
     }
 
     update(){
-        if(!this._gamePaused && !this._gameSelectingCards){
+        if(!this._gamePaused && !this._gameSelectingCards && !this._gameEnd){
             this._gmEnemies.forEach(x => x[1].update());
             this._gmBullets.forEach(x => x[1].update());
             this._gmPoints.forEach(x => x[1].update());
