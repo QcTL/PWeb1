@@ -15,7 +15,6 @@ class BulletSpawner{
 
     shootEnemy(){
         this._bsGameManager.addElementBullet(new Bullet(this._bsGameManager, this._bsPlayer)); //TODO COMPLETE
-        console.log("SHOOTS FIRED");
     }
 
     setPause(v){
@@ -314,6 +313,11 @@ export class Enemy extends BaseEntity{
         if(!this.isInsideEnemies(this._pRealVect[0] * this._pVel + this._pPos[0],this._pRealVect[1] * this._pVel + this._pPos[1], this._pPos)){
             this._pPos[0] += this._pRealVect[0] * this._pVel;
             this._pPos[1] += this._pRealVect[1] * this._pVel;
+        }
+
+        if( (this._pPos[0] - this._pPlayer.getPos()[0])*(this._pPos[0] - this._pPlayer.getPos()[0]) + 
+            (this._pPos[1] - this._pPlayer.getPos()[1])*(this._pPos[1] - this._pPlayer.getPos()[1]) < 0.01){
+            this._pPlayer.tickDamage();
         }
     
         this._pRealVect[0] += (this._pApunVect[0] - this._pRealVect[0])* this._pTurningVel;

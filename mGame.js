@@ -297,3 +297,28 @@ export class EntityRegularPoligon extends EntityProperties{
 
     }
 }
+
+export class EntityLineStrip extends EntityProperties{
+    constructor(lPointsPositions, properties = null){
+        super(properties)
+        this._lPoints = lPointsPositions;
+        this.rVertices = lPointsPositions.flat();
+    }  
+    initBuffer(gl){
+        this.idBufferVertices = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.idBufferVertices);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.rVertices), gl.STATIC_DRAW);
+    }
+
+    drawInto(gl, program){
+        this.displayProperty(gl);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.idBufferVertices);
+        gl.vertexAttribPointer(program.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(gl.LINE_STRIP, 0,  this.rVertices.length/3);
+        gl.lineWidth(1);
+    }
+
+    update(){
+
+    }
+}

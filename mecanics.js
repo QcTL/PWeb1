@@ -72,6 +72,7 @@ export class PointCounter{
     reducePoint(){
         this._pcPointsToNext -= 1;
         if(this._pcPointsToNext <= 0){
+            this._pcGameManager.startCardSelection();
             this._pcPointsToNext = this._lvlProg [this._pcIndexProg];
             this._pcIndexProg += 1;
         }
@@ -98,7 +99,6 @@ export class Timer{
       }
 
       updateTimer() {
-        console.log(this._tTotalSeconds );
         if (!this._tPaused && this._tTotalSeconds > 0) {
             this._tTotalSeconds--;
             const minutes = Math.floor(this._tTotalSeconds / 60);
@@ -113,7 +113,6 @@ export class Timer{
       }
     
       drawText(text) {
-        console.log("TIO ACTUALIZATE COJONES ")
         this._tCtx.clearRect(0, 0, 500, 75);
         this._tCtx.font = 'bold 4em Montserrat';
         this._tCtx.fillStyle = 'white';
@@ -136,14 +135,14 @@ export class LifeCounter{
     }
 
     showPoints() {
-        this._pcCtx.clearRect(0, 65, 1000, 200); //TODO Canviar
+        this._pcCtx.clearRect(500, 0, 1000, 1000); //TODO Canviar
         this._pcCtx.font = 'bold 4em Montserrat';
         this._pcCtx.fillStyle = 'white';
         this._pcCtx.fillText(this._pcValue, 850, 60);
     }
 
     changeValue(v){
-        this.this._pcValue = v;
+        this._pcValue = v;
         this.showPoints();
     }
 }
@@ -157,7 +156,7 @@ export class CardSelector{
         this._csListCards = [new Card(gm,0),new Card(gm,1),new Card(gm,2)];
         this._csListTickets = [];
 
-        this._csCardController = new CardController();
+        this._csCardController = new CardController(this);
 
         this._csIsActive = false;
         this._csMousePosition = [0.0,0.0];
@@ -172,16 +171,19 @@ export class CardSelector{
     }
 
     setClickPos(v){
+        console.log(v);
         this._csActiveCard = this._csListCards.find(x=> x.isPointInside(v));
-        this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
+        console.log("PRESSED CARD" + this._csActiveCard)
+        //this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
+        this._csGameManager.endCardSelection();
     }
 
     displayCards(gs){
         this._csListCards.forEach(
             x => {
-                this._csListCards.push(gs.addElement(p.getVisBack()));
-                this._csListCards.push(gs.addElement(p.getVisLines()));
-                this._csListCards.push(gs.addElement(p.getVisElement()));
+                this._csListTickets.push(gs.addElement(x.getVisBack()));
+                this._csListTickets.push(gs.addElement(x.getVisCont()));
+                //this._csListTickets.push(gs.addElement(x.getVisElement()));
             });
         this._csIsActive = true; 
     }
@@ -194,8 +196,18 @@ export class CardSelector{
     update(){
         if(this._csIsActive){
             //Animacio Carta:
-            this._csListCards.forEach(x => {if(x.isPointInside(this._csMousePosition)) x.setActive(); else x.setOff();}); 
+            this._csListCards.forEach(x => { 
+                    x.update();
+                    if(x.isPointInside(this._csMousePosition)){
+                        x.setActive();
+                        //console.log("HELLO")
+                    }else{x.setOff();}
+                }); 
                 //Es podria optimitzar, comprovar si es dins o estas actiu, i si ho estas torna a comprovar per si hauries de deixar-ho d'estar
+            //this._csActiveCard = this._csListCards.find(x=> x.isPointInside(this._csMousePosition));
+            //if(this._csActiveHoverCard != undefined){
+
+            //}
         }
     }
 

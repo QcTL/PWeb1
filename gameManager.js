@@ -26,6 +26,7 @@ class GameManager{
 
         this._gmGameLoop = true;
         this._gamePaused = false;
+        this._gameSelectingCards = false;
 
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
 
@@ -45,8 +46,25 @@ class GameManager{
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
     }
 
+    startCardSelection(){
+        this._mecIM.askSwapInputManager();
+        this._mecCs.displayCards(this._gameScreen);
+        
+        this._gameSelectingCards = true;
+        this.swapPauseGame(undefined);
+    }
+    endCardSelection(){
+        this._mecIM.askSwapInputManager();
+        this._mecCs.removeCards(this._gameScreen);
+        
+        //ORDRE IMPORTANT
+        this.swapPauseGame(undefined);
+        this._gameSelectingCards = false;
+    }
+
+
     swapPauseGame(e){
-        if(e.key == 'p'){
+        if((e != undefined && e.key == 'p') || this._gameSelectingCards){
             this._gamePaused = !this._gamePaused;
             this._gmPlayer.setPause(this._gamePaused);
             this._mecHS.setPause(this._gamePaused)
@@ -73,11 +91,14 @@ class GameManager{
     }
 
     update(){
-        if(!this._gamePaused){
+        if(!this._gamePaused && !this._gameSelectingCards){
             this._gmEnemies.forEach(x => x[1].update());
             this._gmBullets.forEach(x => x[1].update());
             this._gmPoints.forEach(x => x[1].update());
             this._gmPlayer.update();
+        }else if(this._gameSelectingCards){
+            console.log("HELLO");
+            this._mecCs.update();
         }
     }
 
@@ -101,7 +122,6 @@ class GameManager{
                     eMin = this._gmEnemies[i][1];
                     lMin = distEnemy(this._gmEnemies[i][1]);
                 }
-                console.log("A");
             }
 
             // Pot ser que no quedi cap enemic que pugi ser apuntat...
