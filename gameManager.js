@@ -108,38 +108,12 @@ class GameManager{
         }
     }
 
-    addElementBullet(b){
-        //Aquest l'hem de tenir aqui a causa que el GM es el que te el llistat de tots els enemics per triar el mes aprop
-        if(this._gmEnemies.length > 0){
-            //:( O(N) per obtenir quin element es el que esta mes aprop? sino com es faria per tenir un ranking.
-                /*
-                - Pot ser que es dispari una altre bala abans de que l'altre hagui impactat, si fan referencia al matiex, estara undefined quant l'altre l'elimini.
-                */
-            function distEnemy(e) {
-                let dX=b.getPos()[0] - e.getPos()[0];
-                let dY=b.getPos()[1] - e.getPos()[1];
-                return dX * dX + dY * dY;
-            }
+    addElementBullet(b){                    
+        
+        let t = this._gameScreen.addElement(b.getVis());
+        b.setTicket(t);
+        this._gmBullets.push([t,b]);
 
-            let eMin = undefined;
-            let lMin = -1;
-            for(let i = 0; i < this._gmEnemies.length; i++){
-                if((!this._gmEnemies[i][1].isPursued() &&  distEnemy(this._gmEnemies[i][1]) < lMin) || eMin == undefined){
-                    eMin = this._gmEnemies[i][1];
-                    lMin = distEnemy(this._gmEnemies[i][1]);
-                }
-            }
-
-            // Pot ser que no quedi cap enemic que pugi ser apuntat...
-            if(eMin != undefined){
-                let t = this._gameScreen.addElement(b.getVis());
-                b.setTicket(t);
-                this._gmBullets.push([t,b]);
-                
-                b.setEnemy(eMin);
-                eMin.setPursued();
-            }
-        }
     }
 
     addElementPoint(pos){
@@ -191,6 +165,35 @@ class GameManager{
         this.update();
         if(this._gmGameLoop)
             requestAnimationFrame(this._sMainLoop.bind(this));
+    }
+
+    getClosestEnemy(p){
+        //Aquest l'hem de tenir aqui a causa que el GM es el que te el llistat de tots els enemics per triar el mes aprop
+        if(this._gmEnemies.length > 0){
+            //:( O(N) per obtenir quin element es el que esta mes aprop? sino com es faria per tenir un ranking.
+                
+                //- Pot ser que es dispari una altre bala abans de que l'altre hagui impactat, si fan referencia al matiex, estara undefined quant l'altre l'elimini.
+                
+                function distEnemy(e) {
+                    let dX=p[0] - e.getPos()[0];
+                    let dY=p[1] - e.getPos()[1];
+                    return dX * dX + dY * dY;
+                }
+    
+                let eMin = undefined;
+                let lMin = -1;
+                for(let i = 0; i < this._gmEnemies.length; i++){
+                    if((!this._gmEnemies[i][1].isPursued() &&  distEnemy(this._gmEnemies[i][1]) < lMin) || eMin == undefined){
+                        eMin = this._gmEnemies[i][1];
+                        lMin = distEnemy(this._gmEnemies[i][1]);
+                    }
+                }
+    
+                // Pot ser que no quedi cap enemic que pugi ser apuntat...
+                if(eMin != undefined){
+                    return eMin;
+                }
+            }
     }
 }
 

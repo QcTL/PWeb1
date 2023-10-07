@@ -1,35 +1,6 @@
+import { BulletSpawner } from "./BulletController.js";
 import { EntityOutLine, EntityRegularPoligon, EntitySprite } from "./GameEngine.js"
 import { PlayerController } from "./MecanicObjects.js";
-
-class BulletSpawner{
-    constructor(parent, gm){
-        this._bsFireRate = 500;
-        this._bsNFired = 1;
-        this._bsLifeBullet = 1; //How many enemies does a single bullet kill
-
-        this._bsIsShooting = true;
-        this._bsGameManager = gm;
-        this._bsPlayer = parent;
-        this._bsPause = false;
-    }
-
-    shootEnemy(){
-        this._bsGameManager.addElementBullet(new Bullet(this._bsGameManager, this._bsPlayer)); //TODO COMPLETE
-    }
-
-    setPause(v){
-        this._bsPause = v;
-    }
-
-    recursiveShooting(){
-        for(let i = 0; i < this._bsNFired; i += 1){
-            if(!this._bsPause)
-                this.shootEnemy();
-        }
-        if(this._bsIsShooting)
-            setTimeout(()=> this.recursiveShooting(),this._bsFireRate);
-    }
-}
 
 class BaseEntity{
     constructor(ge, IPos, IRealVect, IApunVect, IVis, ITopVel, ITurnVel){
@@ -58,10 +29,10 @@ class BaseEntity{
 }
 
 export class Player extends BaseEntity{
-    constructor(ge){
+    constructor(gm){
         let _sPA = 16
         let _sPS = 0.01
-        super(ge,[0,0,0], [0,0], [0,0],new EntitySprite(
+        super(gm,[0,0,0], [0,0], [0,0],new EntitySprite(
             [0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,
              0,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1,
              0,1,1,0,0,0,1,1,1,1,1,1,1,1,1,0,
@@ -87,8 +58,8 @@ export class Player extends BaseEntity{
         this._pMousePos = [0,0];
 
         this._pPlayerController = new PlayerController(this);
-        this._pPlayerBulletSpawner = new BulletSpawner(this, ge);
-        this._pPlayerBulletSpawner.recursiveShooting();
+        this._pPlayerBulletSpawner = new BulletSpawner(this, gm);
+        this._pPlayerBulletSpawner.start();
 
         this._pVis.setProperty("pColor",[0.4824,0.3294,0.502,1.0]);
 
@@ -147,59 +118,6 @@ export class Player extends BaseEntity{
         this._pVis.setProperty("pFlip", this._pRealVect[0] < -0.1 );
         this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0])
     }
-}
-
-class Bullet{
-    constructor(ge, player){
-        this._gameEngine = ge;
-        this._pPos = [player.getPos()[0],player.getPos()[1],0.0 ];
-        this._pDir = [0,0];
-        this._pVel = 0.01;
-        this._pSize = 0.03;
-        this._pVis = new EntityRegularPoligon(6,this._pSize);
-        this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1] - (this._pSize)/2,0.0])
-    }
-
-    setEnemy(enemy){
-        this._pEnemy = enemy;
-    }
-
-    setTicket(t){
-        this._pTicket = t;
-    }
-
-    getPos(){
-        return this._pPos;
-    }
-    
-    getVis(){
-        return this._pVis;
-    }
-
-    destroy(){
-        if(this._pTicket == undefined)
-            alert("Eliminant un element que no s'està mostrant per pantalla");
-        else this._gameEngine.removeElement(this._pTicket,"Bullets");
-    }
-
-    //Directament a enemic
-    update(){
-        this._pDir[0] = this._pEnemy.getPos()[0] - this._pPos[0];
-        this._pDir[1] = this._pEnemy.getPos()[1] - this._pPos[1];
-        // ? this._pEnemy.destroy() : none;
-        
-        if((this._pDir[0]*this._pDir[0] + this._pDir[1]*this._pDir[1]) < 0.01){
-            this._pEnemy.destroy();
-            this.destroy();
-        }
-
-        normalizeVector(this._pDir);
-        this._pPos[0] += this._pDir[0] * this._pVel;
-        this._pPos[1] += this._pDir[1] * this._pVel;
-
-        this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1]- (this._pSize)/2,0.0])
-    }
-
 }
 
 export class Point{
@@ -347,7 +265,7 @@ export class Enemy extends BaseEntity{
     }
 }
 
-function normalizeVector(vect){
+export function normalizeVector(vect){
     const mag = Math.sqrt(vect[0]*vect[0] + vect[1]*vect[1]);
     if(mag != 0){
         vect[0] /= mag;
