@@ -45,6 +45,9 @@ class GameManager{
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
+
+        //DEBUG:
+        //this.startCardSelection()
     }
 
     endGame(){
@@ -103,7 +106,6 @@ class GameManager{
             this._gmPoints.forEach(x => x[1].update());
             this._gmPlayer.update();
         }else if(this._gameSelectingCards){
-            console.log("HELLO");
             this._mecCs.update();
         }
     }

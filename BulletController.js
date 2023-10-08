@@ -21,7 +21,6 @@ export class BulletSpawner{
     }
 
     shootEnemy(proj){
-        console.log("P")
         this._bsGameManager.addElementBullet(proj.getInstance()); //TODO COMPLETE
     }
 
@@ -30,7 +29,6 @@ export class BulletSpawner{
     }
 
     recursiveShooting(proj){
-        console.log(proj.getQuant())
         for(let i = 0; i < proj.getQuant(); i += 1){
             if(!this._bsPause && proj.canSpawn())
                 this.shootEnemy(proj);

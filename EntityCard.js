@@ -1,7 +1,7 @@
 import { EntityLineStrip, EntityOutLine } from "./GameEngine.js";
 
 export class Card{
-    constructor(ge, i){
+    constructor(gm, i){
         this._cPos = [0.0,0.0,0.0];
 
         this._cRectangle = {
@@ -9,6 +9,13 @@ export class Card{
             y: 0.6,     // y-coordinate of the top-left corner
             width: 0.5, // width of the rectangle
             height: 0.9  // height of the rectangle
+        };
+
+        this._cTextRect = {
+            x: 0.7*i - 0.7 - 0.5/2,
+            y: 0.6,     
+            width: 0.25,
+            height: 0.45
         };
 
 
@@ -21,10 +28,21 @@ export class Card{
         this._cVisCont.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
         this._cVisCont.setProperty("pOffset", this._cPos);
 
+        //TEXT
+        this._cText = new TextCard(gm, "HOLA", "P",this._transformRectangleWebglToCanvas(this._cTextRect));
 
         this._cCardHovered = false;
     }
     
+    _transformRectangleWebglToCanvas(rect){
+        return {
+            x:  ((rect.x + 1) / 2) * 1000,
+            y: ((rect.y + 1) / 2)  * (-1000) + 1000,
+            width: rect.width  * 1000,
+            height: rect.height * (1000),
+        }
+    }
+
     _calculateInnerRectanglePoints(rectangle, diff) {
     
         // Calculate the coordinates of the inner rectangle's points
@@ -50,6 +68,11 @@ export class Card{
         }else if(this._cPos[1] > 0.0){
             this._cPos[1] = Math.max(0.0, this._cPos[1] - 0.02); 
         }
+        this._cText.update((((this._cTextRect.y  + this._cPos[1]) + 1) / 2) * (-1000) + 1000);
+    }
+
+    clearText(){
+        this._cText.clear();
     }
 
     destroy(){
@@ -71,5 +94,46 @@ export class Card{
 
     setOff(){
         this._cCardHovered = false;
+    }
+}
+
+class TextCard{
+    constructor(gm,txtName, txtDes, rectPos) {
+        console.log(rectPos);
+        this._tcTxtName = txtName;
+        this._tcTxtDes = txtDes;
+        this._tcGameManager = gm;
+        this._tcRectPos = rectPos;
+        this._tcCanvas = document.querySelector("#gCanvasText");
+        this._tcCtx = this._tcCanvas.getContext("2d");
+        //this.showText()
+    }
+    clear(){
+        this._tcCtx.clearRect(this._tcRectPos.x, this._tcRectPos.y, this._tcRectPos.width, this._tcRectPos.height);
+    }
+
+    showText() {
+        this._tcCtx.clearRect(this._tcRectPos.x, this._tcRectPos.y, this._tcRectPos.width, this._tcRectPos.height);
+
+        //NAME 
+        this._tcCtx.font = 'bold 1.5em Montserrat';
+        this._tcCtx.fillStyle = 'white';
+        const textWidthC = this._tcCtx.measureText(this._tcTxtName).width;
+        const cXN = this._tcRectPos.x + (this._tcRectPos.width - textWidthC) / 2;
+        const cYN = this._tcRectPos.y + this._tcRectPos.height / 6;
+        this._tcCtx.fillText(this._tcTxtName,cXN, cYN );
+        //DESC
+
+        this._tcCtx.font = 'bold 1em Montserrat';
+        this._tcCtx.fillStyle = 'white';
+        const textWidthD = this._tcCtx.measureText(this._tcTxtName).width;
+        const cXD = this._tcRectPos.x + (this._tcRectPos.width - textWidthD) / 2;
+        const cYD = this._tcRectPos.y + this._tcRectPos.height - this._tcRectPos.height / 6;
+        this._tcCtx.fillText(this._tcTxtName,cXD, cYD );        
+    }
+
+    update(offSetY){
+        this._tcRectPos.y = offSetY;
+        this.showText();
     }
 }

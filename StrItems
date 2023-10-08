@@ -1,0 +1,53 @@
+const dataArray = [
+    { 
+        id: 0, 
+        name: 'Magic Wand', 
+        description: '', 
+        type: 'PROJECTILE',
+        idSprite: 'ID_SPR_WAND',
+        listPrereq: [] 
+    },
+    { 
+        id: 1, 
+        name: 'Whip', 
+        description: 'Made with an extrange black hair', 
+        type: 'PROJECTILE',
+        idSprite: 'ID_SPR_WHIP',
+        listPrereq: [] 
+    },
+    { 
+        id: 2, 
+        name: 'Whip +', 
+        description: 'The oddor is more potent', 
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 1,
+            valueToIncrement: "freq",
+            increment: -200
+        },
+        idSprite: undefined, 
+        listPrereq: [1] 
+    },
+    { 
+        id: 3, 
+        name: 'Fire Potion', 
+        description: 'Inflammable means flammable!?!', 
+        type: 'PROJECTILE',
+        idSprite: 'ID_SPR_SPLASH', 
+        listPrereq: [] 
+    },
+    { 
+        id: 4, 
+        name: 'Fire Potion +', 
+        description: 'Filled to the brim',
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 1,
+            valueToIncrement: "duration",
+            increment: 250
+        },
+        idSprite: undefined,
+        listPrereq: [3] 
+    },
+
+];

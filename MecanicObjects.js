@@ -63,7 +63,7 @@ export class PointCounter{
     }
 
     showPoints() {
-        this._pcCtx.clearRect(0, 65, 1000, 200);
+        this._pcCtx.clearRect(0, 65, 1000, 100);
         this._pcCtx.font = 'bold 2em Montserrat';
         this._pcCtx.fillStyle = 'white';
         this._pcCtx.fillText(this._pcPointsToNext, 10, 100);
@@ -160,6 +160,36 @@ export class CardSelector{
 
         this._csIsActive = false;
         this._csMousePosition = [0.0,0.0];
+
+        this._csPresentObjectsId = [];
+        this._csPossObjects = [];
+        this._csCurrSelecteds = [];
+    }
+
+    selectOneRandomValidObject(){
+        var isValid = false;
+        while(!isValid){
+            var allPresent = true
+            var o = _getRandomElementFromArray(this._csPossObjects);
+            o.listPrereq.forEach(
+                x => {
+                    if(!allPresent || this._csCurrSelecteds.find(y=> y.id == x) == undefined){
+                        allPresent = false;
+                    }
+                }
+            );
+            if(allPresent){
+                return o;
+            }
+        }
+    }
+
+    _getRandomElementFromArray(array) {
+        if (array.length === 0) {
+          return null;  // Return null for an empty array
+        }
+        const randomIndex = Math.floor(Math.random() * array.length);
+        return array[randomIndex];
     }
 
     getController(){
@@ -191,6 +221,7 @@ export class CardSelector{
     removeCards(gs){
         this._csListTickets.forEach(x => gs.removeElement(x));
         this._csIsActive = false; 
+        this._csListCards.forEach(x=> x.clearText());
     }
 
     update(){
