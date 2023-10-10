@@ -2,7 +2,7 @@ const dataArray = [
     { 
         id: 0, 
         name: 'Magic Wand', 
-        description: '', 
+        description: '\n', 
         type: 'PROJECTILE',
         idSprite: 'ID_SPR_WAND',
         listPrereq: [] 
@@ -10,7 +10,7 @@ const dataArray = [
     { 
         id: 1, 
         name: 'Whip', 
-        description: 'Made with an extrange black hair', 
+        description: 'Made with an \n extrange black hair', 
         type: 'PROJECTILE',
         idSprite: 'ID_SPR_WHIP',
         listPrereq: [] 
@@ -18,7 +18,7 @@ const dataArray = [
     { 
         id: 2, 
         name: 'Whip +', 
-        description: 'The oddor is more potent', 
+        description: 'The oddor is \n more potent', 
         type: 'UPGRADE',
         upgradeElement:  {
             idToUpgrade: 1,
@@ -31,7 +31,7 @@ const dataArray = [
     { 
         id: 3, 
         name: 'Fire Potion', 
-        description: 'Inflammable means flammable!?!', 
+        description: 'Inflammable means \n flammable!?!', 
         type: 'PROJECTILE',
         idSprite: 'ID_SPR_SPLASH', 
         listPrereq: [] 
@@ -39,7 +39,7 @@ const dataArray = [
     { 
         id: 4, 
         name: 'Fire Potion +', 
-        description: 'Filled to the brim',
+        description: 'Filled to \n the brim',
         type: 'UPGRADE',
         upgradeElement:  {
             idToUpgrade: 1,
@@ -51,3 +51,5 @@ const dataArray = [
     },
 
 ];
+
+export {dataArray};

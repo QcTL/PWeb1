@@ -1,7 +1,7 @@
 import { EntityLineStrip, EntityOutLine } from "./GameEngine.js";
 
 export class Card{
-    constructor(gm, i){
+    constructor(gm, i, objDisplay){
         this._cPos = [0.0,0.0,0.0];
 
         this._cRectangle = {
@@ -18,6 +18,7 @@ export class Card{
             height: 0.45
         };
 
+        this._cObject = objDisplay;
 
         this._cVisBack = new EntityOutLine([[0.7*i - 0.7,-0.3], [0.7*i - 0.7,0.6]],0.5);
         this._cVisCont = new EntityLineStrip(this._calculateInnerRectanglePoints(this._cRectangle, 0.03));
@@ -29,11 +30,20 @@ export class Card{
         this._cVisCont.setProperty("pOffset", this._cPos);
 
         //TEXT
-        this._cText = new TextCard(gm, "HOLA", "P",this._transformRectangleWebglToCanvas(this._cTextRect));
+        this._cText = new TextCard(gm, objDisplay.name,objDisplay.description,this._transformRectangleWebglToCanvas(this._cTextRect));
 
         this._cCardHovered = false;
     }
     
+    setNewActiveObject(obj){
+        this._cObject = obj;
+        this._cText.changeObject(obj.name,obj.description);
+    }
+    
+    getActiveObject(){
+        return this._cObject;
+    }
+
     _transformRectangleWebglToCanvas(rect){
         return {
             x:  ((rect.x + 1) / 2) * 1000,
@@ -112,6 +122,11 @@ class TextCard{
         this._tcCtx.clearRect(this._tcRectPos.x, this._tcRectPos.y, this._tcRectPos.width, this._tcRectPos.height);
     }
 
+    changeObject(name, description){
+        this._tcTxtName = name;
+        this._tcTxtDes = description;
+    }
+
     showText() {
         this._tcCtx.clearRect(this._tcRectPos.x, this._tcRectPos.y, this._tcRectPos.width, this._tcRectPos.height);
 
@@ -126,10 +141,17 @@ class TextCard{
 
         this._tcCtx.font = 'bold 1em Montserrat';
         this._tcCtx.fillStyle = 'white';
-        const textWidthD = this._tcCtx.measureText(this._tcTxtName).width;
-        const cXD = this._tcRectPos.x + (this._tcRectPos.width - textWidthD) / 2;
+        this._tcTxtDesComp = this._tcTxtDes.split("\n");
+
+        const textWidthD0 = this._tcCtx.measureText(this._tcTxtDesComp[0]).width;
+        const textWidthD1 = this._tcCtx.measureText(this._tcTxtDesComp[1]).width;
+
+        const cXD0 = this._tcRectPos.x + (this._tcRectPos.width - textWidthD0) / 2;
         const cYD = this._tcRectPos.y + this._tcRectPos.height - this._tcRectPos.height / 6;
-        this._tcCtx.fillText(this._tcTxtName,cXD, cYD );        
+        this._tcCtx.fillText(this._tcTxtDesComp[0],cXD0, cYD );   
+
+        const cXD1 = this._tcRectPos.x + (this._tcRectPos.width - textWidthD1) / 2;
+        this._tcCtx.fillText(this._tcTxtDesComp[1],cXD1, cYD+20);        
     }
 
     update(offSetY){

@@ -1,4 +1,5 @@
 import { Card } from "./EntityCard.js";
+import { dataArray } from "./StrItems.js";
 
 export class HordeSpawner{
     constructor(gm, player, distanceK){
@@ -147,39 +148,44 @@ export class LifeCounter{
     }
 }
 
-
-
 export class CardSelector{
     constructor(gm) {
         this._csGameManager = gm;
 
-        this._csListCards = [new Card(gm,0),new Card(gm,1),new Card(gm,2)];
+        this._csPresentObjectsId = [];
+        this._csPossObjects = dataArray;
+        this._csCurrSelecteds = [];
+
+
+        this._csListCards = [
+            new Card(gm,0,this.selectOneRandomValidObject()),
+            new Card(gm,1,this.selectOneRandomValidObject()),
+            new Card(gm,2,this.selectOneRandomValidObject())];
         this._csListTickets = [];
 
         this._csCardController = new CardController(this);
 
         this._csIsActive = false;
         this._csMousePosition = [0.0,0.0];
-
-        this._csPresentObjectsId = [];
-        this._csPossObjects = [];
-        this._csCurrSelecteds = [];
     }
 
     selectOneRandomValidObject(){
         var isValid = false;
         while(!isValid){
             var allPresent = true
-            var o = _getRandomElementFromArray(this._csPossObjects);
+            var o = this._getRandomElementFromArray(this._csPossObjects);
             o.listPrereq.forEach(
                 x => {
-                    if(!allPresent || this._csCurrSelecteds.find(y=> y.id == x) == undefined){
+                    if(!allPresent || this._csPresentObjectsId.find(y=> y.id == x) == undefined){
                         allPresent = false;
                     }
                 }
             );
-            if(allPresent){
+
+            if(allPresent && this._csCurrSelecteds.find(y=> y.id == o.id) == undefined){
+                this._csCurrSelecteds.push(o);
                 return o;
+                // Afeguir a CurrSelecteds
             }
         }
     }
@@ -206,6 +212,13 @@ export class CardSelector{
         console.log("PRESSED CARD" + this._csActiveCard)
         //this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
         this._csGameManager.endCardSelection();
+        
+        // Eliminar tots els elements que es mostren pero que no s'han truat
+        // Todo, eliminar del possible quin s'hagui seleccionat
+        this._csCurrSelecteds = []
+
+        this._csListCards.forEach(x => x.setNewActiveObject(this.selectOneRandomValidObject()));
+        this._csPossObjects.remove(this._csActiveCard.getActiveObject());
     }
 
     displayCards(gs){
