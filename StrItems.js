@@ -42,7 +42,7 @@ const dataArray = [
         description: 'Filled to \n the brim',
         type: 'UPGRADE',
         upgradeElement:  {
-            idToUpgrade: 1,
+            idToUpgrade: 3,
             valueToIncrement: "duration",
             increment: 250
         },

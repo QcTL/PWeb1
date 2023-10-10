@@ -134,6 +134,10 @@ class GameManager{
         p.setTicket(t);
     }
 
+    addActiveObject(obj){
+        this._gmPlayer.addObject(obj);
+    }
+
     removeElement(vTicket,type){
         this._gameScreen.removeElement(vTicket);
         let lList = undefined;

@@ -66,6 +66,10 @@ export class Player extends BaseEntity{
         this._pLife = 100;
     }
 
+    addObject(obj){
+        this._pPlayerBulletSpawner.addObject(obj);
+    }
+
     getController(){
         return this._pPlayerController;
     }

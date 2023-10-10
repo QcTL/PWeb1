@@ -9,6 +9,7 @@ export class BulletSpawner{
         this._bsPause = false;
 
         this._bsListProjectiles = [ new BulletContainer(gm, parent)];
+        this._bsListProjectilesId = [0];
     }
 
     start(){
@@ -16,8 +17,39 @@ export class BulletSpawner{
     }
 
     addObject(objSpawner){
-        this._bsListProjectiles.push(objSpawner);
-        this.recursiveShooting(objSpawner);
+        //this._bsListProjectiles.push(objSpawner);
+        //this.recursiveShooting(objSpawner);
+        objElement = undefined
+        if(objSpawner.type == 'PROJECTILE'){
+            switch(objSpawner.id){
+                case 0:
+                    objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
+                break;
+                case 1:
+                    objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
+                break;
+                case 3:
+                    objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
+                break;
+            }
+            this._bsListProjectilesId.push(objSpawner.id);
+        }else{
+            this.applyUpgrade(objSpawner, this._bsListProjectiles[this._bsListProjectilesId.indexOf(objSpawner.upgradeElement.idToUpgrade)]);
+        }  
+    }
+
+    applyUpgrade(obj, container){
+        switch(obj.upgradeElement.valueToIncrement){
+            case 'duration':
+                container.changeDuration(obj.upgradeElement.increment);
+            break;
+            case 'freq':
+                container.changeFreq(obj.upgradeElement.increment);
+            break;
+            case 'quantity':
+                container.changeQuantity(obj.upgradeElement.increment);
+            break;
+        }
     }
 
     shootEnemy(proj){

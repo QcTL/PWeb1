@@ -210,7 +210,7 @@ export class CardSelector{
         console.log(v);
         this._csActiveCard = this._csListCards.find(x=> x.isPointInside(v));
         console.log("PRESSED CARD" + this._csActiveCard)
-        //this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
+        this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
         this._csGameManager.endCardSelection();
         
         // Eliminar tots els elements que es mostren pero que no s'han truat
