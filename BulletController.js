@@ -232,7 +232,7 @@ class BulletContainer extends ObjectProjectile{
             // ? this._pEnemy.destroy() : none;
             
             if((this._pDir[0]*this._pDir[0] + this._pDir[1]*this._pDir[1]) < 0.01){
-                this._pEnemy.destroy();
+                this._pEnemy.removePointLife(1);
                 this.destroy();
             }
 
