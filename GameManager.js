@@ -12,16 +12,6 @@ class GameManager{
         this._gmPoints = []
         this._gmPlayer = new Player(this);
 
-        for(let i = 0; i < -1; i ++){
-            let p = new Enemy(this, this._gmPlayer)
-            let t = this._gameScreen.addElement(p.getVis())
-
-            this._gmEnemies.push([t,p]);
-            this._gmEnemies[i][1].setTicket(t);
-        }      
-        
-
-
         this._gameScreen.addElement(this._gmPlayer.getVis());
 
         this._gmGameLoop = true;
@@ -126,8 +116,8 @@ class GameManager{
         p.setTicket(t);
     }
 
-    addElementEnemy(diff, pos){
-        let p = new Enemy(this, this._gmPlayer,pos)
+    addElementEnemy(diff, pos, life){
+        let p = new Enemy(this, this._gmPlayer,pos,life)
         let t = this._gameScreen.addElement(p.getVis())
 
         this._gmEnemies.push([t,p]);

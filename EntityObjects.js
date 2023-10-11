@@ -171,7 +171,7 @@ export class Point{
 }
 
 export class Enemy extends BaseEntity{
-    constructor(ge, player, pos = undefined){
+    constructor(ge, player, life, pos = undefined){
         let tPos = pos != undefined ? pos: [Math.random()*2 - 1,Math.random()*2 - 1,0]
         let _sPS = 0.01
         super(ge,tPos,[0,0],[0,0],new SpriteController().getSpriteObject("ID_ENEMY1",_sPS),1,0.5)
@@ -179,7 +179,7 @@ export class Enemy extends BaseEntity{
         this._pPlayer = player; 
         this._pPursuedBullet = false;
 
-        this._pLife = 1;
+        this._pLife = life;
 
         this._pVis.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
         this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0]);

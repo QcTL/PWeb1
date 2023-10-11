@@ -6,11 +6,44 @@ export class HordeSpawner{
         this._hsDistK = distanceK;
         this._hsPlayer = player; 
         this._hsGameManager = gm;
-        this._hsDiffLevel = 0;
+        
         this._hsSpawnRate = 1000;
-        this._hsWhileSpawning = true;
         this._hsNSpawn = 2;
+
+        this._hsWhileSpawning = true;
         this._hsPause = false;
+
+        this._hsLevelProgression = [
+            {
+                _hsSpawnRate: 1000,
+                _hsNSpawn : 1,
+                _hsTypeEnemy: 1,
+                _hsLife: 1,
+            },
+            {
+                _hsSpawnRate: 750,
+                _hsNSpawn : 1,
+                _hsTypeEnemy: 1,
+                _hsLife: 1,
+            },{
+                _hsSpawnRate: 1000,
+                _hsNSpawn : 2,
+                _hsTypeEnemy: 2,
+                _hsLife: 2,
+            },{
+                _hsSpawnRate: 750,
+                _hsNSpawn : 2,
+                _hsTypeEnemy: 2,
+                _hsLife: 2,
+            },{
+                _hsSpawnRate: 500,
+                _hsNSpawn : 2,
+                _hsTypeEnemy: 2,
+                _hsLife: 2,   
+            }
+        ]
+        this._hsDiffLevelList = [20,30,60,100,];
+        this._hsDiffLevel = 0;
         this.recursiveSpawning();
     }
 
@@ -19,14 +52,19 @@ export class HordeSpawner{
     }
 
     recursiveSpawning(){
-        for(let i = 0; i < this._hsNSpawn; i += 1){
+        for(let i = 0; i < this._hsLevelProgression[this._hsDiffLevel]._hsNSpawn; i += 1){
             if(!this._hsPause)
-                this.spawnEnemy();}
+                this.spawnEnemy(this._hsLevelProgression[this._hsDiffLevel]._hsTypeEnemy,this._hsLevelProgression[this._hsDiffLevel]._hsLife);
+                this._hsDiffLevelList[this._hsDiffLevel] -= 1;
+                if(this._hsDiffLevelList[this._hsDiffLevel] < 0){
+                    this._hsDiffLevel += 1;
+                } 
+            }
         if(this._hsWhileSpawning)
-            setTimeout(()=> this.recursiveSpawning(),this._hsSpawnRate);
+            setTimeout(()=> this.recursiveSpawning(),this._hsLevelProgression[this._hsDiffLevel]._hsSpawnRate);
     }
 
-    spawnEnemy(){
+    spawnEnemy(type, life){
         let n = randomIntInterval(0,3);
         let p = [0,0]; 
         let varPos = randomDeciInterval(-this._hsDistK, this._hsDistK);
@@ -40,7 +78,7 @@ export class HordeSpawner{
             p = [varPos +  this._hsPlayer.getPos()[0],-this._hsDistK + this._hsPlayer.getPos()[1]];
         }
 
-        this._hsGameManager.addElementEnemy(this._hsDiffLevel, p);
+        this._hsGameManager.addElementEnemy(this._hsDiffLevel, p,life);
     }
 }
 
