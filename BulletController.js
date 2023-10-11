@@ -26,7 +26,7 @@ export class BulletSpawner{
                     objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
                 break;
                 case 1:
-                    objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
+                    objElement = new WhipContainer(his._bsGameManager,this._bsPlayer);
                 break;
                 case 3:
                     objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
@@ -76,8 +76,21 @@ class ObjectProjectile{
 
         this._gameManager = gm;
         this._opPlayer = player;
+        this._opDuration = 1000;
         this._opFreq = 1000;
         this._opQuant = 1;
+    }
+
+    changeDuration(v){
+        this._opDuration += v;
+    }
+
+    changeFreq(v){
+        this._opFreq += v;
+    }
+
+    changeQuantity(v){
+        this._opQuant += v;
     }
 
     getFreq(){
@@ -86,6 +99,10 @@ class ObjectProjectile{
 
     getQuant(){
         return this._opQuant;
+    }
+
+    getDuration(){
+        return this._opDuration;
     }
 
     getInstance(){

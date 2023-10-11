@@ -32,7 +32,7 @@ class GameManager{
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
 
         //GUI
-        this._mecTi = new Timer(this,1000);
+        this._mecTi = new Timer(this,600);
         this._mecTi.startTimer();
         this._mecPc = new PointCounter(this,this._lvlProgression);
         this._mecLc = new LifeCounter(this);

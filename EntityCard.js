@@ -143,15 +143,12 @@ class TextCard{
         this._tcCtx.fillStyle = 'white';
         this._tcTxtDesComp = this._tcTxtDes.split("\n");
 
-        const textWidthD0 = this._tcCtx.measureText(this._tcTxtDesComp[0]).width;
-        const textWidthD1 = this._tcCtx.measureText(this._tcTxtDesComp[1]).width;
-
-        const cXD0 = this._tcRectPos.x + (this._tcRectPos.width - textWidthD0) / 2;
         const cYD = this._tcRectPos.y + this._tcRectPos.height - this._tcRectPos.height / 6;
-        this._tcCtx.fillText(this._tcTxtDesComp[0],cXD0, cYD );   
-
-        const cXD1 = this._tcRectPos.x + (this._tcRectPos.width - textWidthD1) / 2;
-        this._tcCtx.fillText(this._tcTxtDesComp[1],cXD1, cYD+20);        
+        for(var i = 0; i < this._tcTxtDesComp.length; i++){
+            const textWidth = this._tcCtx.measureText(this._tcTxtDesComp[i]).width;    
+            const cXD = this._tcRectPos.x + (this._tcRectPos.width - textWidth) / 2;
+            this._tcCtx.fillText(this._tcTxtDesComp[i],cXD, cYD + 20*i );
+        }
     }
 
     update(offSetY){
