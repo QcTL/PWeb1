@@ -256,7 +256,7 @@ export class CardSelector{
         this._csCurrSelecteds = []
 
         this._csListCards.forEach(x => x.setNewActiveObject(this.selectOneRandomValidObject()));
-        this._csPossObjects.remove(this._csActiveCard.getActiveObject());
+        this._csPossObjects = this._csPossObjects.filter(x => x !== this._csActiveCard.getActiveObject());
     }
 
     displayCards(gs){
@@ -334,26 +334,31 @@ export class CardController{
         this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");
         this.gParent = parent;
-    }
-
-    turnOffController(){
-        this.gCanvas.removeEventListener('mousemove', this.mouseMoved.bind(this));
-        this.gCanvas.removeEventListener('click', this.mouseClicked.bind(this));
-    }
-
-    turnOnController(){
+        this.gActive = false;
         this.gCanvas.addEventListener('mousemove', this.mouseMoved.bind(this));
         this.gCanvas.addEventListener('click', this.mouseClicked.bind(this));
     }
 
+    turnOffController(){
+        this.gActive = false;
+    }
+
+    turnOnController(){
+        this.gActive = true;
+    }
+
     mouseMoved(event){
-        const rectGCanvas = this.gCanvas.getBoundingClientRect();
-        this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
+        if(this.gActive){
+            const rectGCanvas = this.gCanvas.getBoundingClientRect();
+            this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
+        }
     }
 
     mouseClicked(event) {
-        const rectGCanvas = this.gCanvas.getBoundingClientRect();
-        this.gParent.setClickPos([((event.clientX - rectGCanvas.left) / rectGCanvas.width * 2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top) / rectGCanvas.height * 2) - 1]);
+        if(this.gActive){
+            const rectGCanvas = this.gCanvas.getBoundingClientRect();
+            this.gParent.setClickPos([((event.clientX - rectGCanvas.left) / rectGCanvas.width * 2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top) / rectGCanvas.height * 2) - 1]);
+        }
     }
 }
 
@@ -362,18 +367,22 @@ export class PlayerController{
         this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");
         this.gParent = parent;
-    }
-
-    turnOffController(){
-        this.gCanvas.removeEventListener('mousemove', this.mouseMoved.bind(this));
-    }
-
-    turnOnController(){
+        this.gActive = false;
         this.gCanvas.addEventListener('mousemove', this.mouseMoved.bind(this));
     }
 
+    turnOffController(){
+        this.gActive = false;
+    }
+
+    turnOnController(){
+        this.gActive = true;
+    }
+
     mouseMoved(event){
-        const rectGCanvas = this.gCanvas.getBoundingClientRect();
-        this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
+        if(this.gActive){
+            const rectGCanvas = this.gCanvas.getBoundingClientRect();
+            this.gParent.setMousePos([((event.clientX - rectGCanvas.left)/rectGCanvas.width*2) - 1, ((rectGCanvas.height - event.clientY - rectGCanvas.top)/rectGCanvas.height*2)-1]);
+        }
     }
 }

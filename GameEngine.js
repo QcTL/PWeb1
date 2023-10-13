@@ -149,8 +149,8 @@ export class EntitySprite extends EntityProperties{
         let nIn = 0;
         let halfX = width*this._pSize/2;
         let halfY = height*this._pSize/2;
-        for(let i = 0; i < height; i ++){
-            for(let j = 0; j < width; j ++){
+        for(let i = 0; i < width; i ++){
+            for(let j = 0; j < height; j ++){
                 if(cVertexPoints[j + i * height] == 1){
                     this.rVertices.push((width - j)*this._pSize - halfX,(height - i)*this._pSize-this._pSize - halfY,0.0);
                     this.rVertices.push((width - j)*this._pSize - halfX,(height - i)*this._pSize - halfY,0.0);
@@ -180,7 +180,7 @@ export class EntitySprite extends EntityProperties{
         gl.vertexAttribPointer(program.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
             //Si tingués indexes aniria aquí.
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.idBufferIndixes);
-        gl.drawElements(gl.TRIANGLES, this.rVertices.length/6*3, gl.UNSIGNED_SHORT,0);
+        gl.drawElements(gl.TRIANGLES, this.rIndices.length , gl.UNSIGNED_SHORT,0);
     }
 
     compactVertex(){

@@ -1,5 +1,6 @@
 import { normalizeVector } from "./EntityObjects.js";
-import { EntityRegularPoligon, EntitySprite } from "./GameEngine.js";
+import { EntityLineStrip, EntityRegularPoligon, EntitySprite } from "./GameEngine.js";
+import { SpriteController } from "./SpriteController.js";
 
 export class BulletSpawner{
     constructor(parent, gm){
@@ -8,7 +9,8 @@ export class BulletSpawner{
         this._bsPlayer = parent;
         this._bsPause = false;
 
-        this._bsListProjectiles = [ new BulletContainer(gm, parent)];
+        //this._bsListProjectiles = [ new BulletContainer(gm, parent)];
+        this._bsListProjectiles = [ new WhipContainer(gm, parent)];
         this._bsListProjectilesId = [0];
     }
 
@@ -19,20 +21,22 @@ export class BulletSpawner{
     addObject(objSpawner){
         //this._bsListProjectiles.push(objSpawner);
         //this.recursiveShooting(objSpawner);
-        objElement = undefined
+        var objElement = undefined
         if(objSpawner.type == 'PROJECTILE'){
             switch(objSpawner.id){
                 case 0:
-                    objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
+                    objElement = new BulletContainer(this._bsGameManager,this._bsPlayer);
                 break;
                 case 1:
-                    objElement = new WhipContainer(his._bsGameManager,this._bsPlayer);
+                    objElement = new WhipContainer(this._bsGameManager,this._bsPlayer);
+                    console.log("AFEGUIT ITEM");
                 break;
                 case 3:
-                    objElement = new BulletContainer(his._bsGameManager,this._bsPlayer);
+                    objElement = new BulletContainer(this._bsGameManager,this._bsPlayer);
                 break;
             }
             this._bsListProjectilesId.push(objSpawner.id);
+            this.recursiveShooting(objElement);
         }else{
             this.applyUpgrade(objSpawner, this._bsListProjectiles[this._bsListProjectilesId.indexOf(objSpawner.upgradeElement.idToUpgrade)]);
         }  
@@ -61,6 +65,7 @@ export class BulletSpawner{
     }
 
     recursiveShooting(proj){
+        console.log(proj)
         for(let i = 0; i < proj.getQuant(); i += 1){
             if(!this._bsPause && proj.canSpawn())
                 this.shootEnemy(proj);
@@ -156,30 +161,50 @@ class WhipContainer extends ObjectProjectile{
     WInst = class WhipInst extends InstObjectProjectile{
         constructor(gm,player){
             super(gm,player);
-            this._pVis = new EntitySprite(6,this._pSize); //TODO
-            this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1] - (this._pSize)/2,0.0])
-
-            this._pPos = player.getPos();
+            this._opDuration = 750;
             this._wiCollisonRectangle = {
-                x: this._pPos[0] - 0.2/2,     // 
-                y: this._pPos[1] - 0.2/2,     // y-coordinate of the top-left corner
-                width: 0.4, // width of the rectangle
-                height: 0.4  // height of the rectangle
+                x: this._pPos[0] ,     // 
+                y: this._pPos[1] -  0.01*20/2,     // y-coordinate of the top-left corner
+                width: 0.01*40, // width of the rectangle
+                height: 0.01*20  // height of the rectangle
             };
+            this._pVis = new SpriteController().getSpriteObject("ID_ELE_WHIP",0.01);
+            /*this._pVis = new EntityLineStrip([0.0,0.0,0.0,
+                this._wiCollisonRectangle.width,0.0,0.0,
+                this._wiCollisonRectangle.width,this._wiCollisonRectangle.height,0.0,
+                0,this._wiCollisonRectangle.height,0.0,
+                
+                0,0,0.0,    
+            ])*/
+            this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1]- 0.01*16/2,0.0]);
+
+            this._pPos = this._iopPlayer.getPos();
             this._wiTimeToDespawn = false;
-            setTimeout(()=> this._wiTimeToDespawn = true,1000);
+            this._isFlip = false;
+            setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
+            setTimeout(()=> this._isFlip = true,this._opDuration/2);
         }
 
         update(){
-            this._pPos = player.getPos();
-            this._wiCollisonRectangle.x = this._pPos[0] - 0.2/2;
-            this._wiCollisonRectangle.y = this._pPos[1] - 0.2/2;
+            this._pPos = this._iopPlayer.getPos();
+            var res =  this._isFlip ? this._wiCollisonRectangle.width: 0;
+            //this._wiCollisonRectangle.x = this._pPos[0] - res;
+            //this._wiCollisonRectangle.y = this._pPos[1] - 0.2/2;
+            this._wiCollisonRectangle.x = this._pPos[0] - res;
+            this._wiCollisonRectangle.y = this._pPos[1] -  0.01*20/2;
 
-            sEnemies = this._gameManager.getListEnemiesArea(this._wiCollisonRectangle); //TODO No existeix pero haria de ser facil, fes que tot sumi +1, aixi no hi ha negatiu.
-            sEnemies.forEach(x => x.destroy());
-
-            this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1] - (this._pSize)/2,0.0]);
-
+            var sEnemies = this._gameManager.getListEnemiesArea(this._wiCollisonRectangle);
+            console.log(sEnemies);
+            sEnemies.forEach(x => x[1].destroy());
+            
+            if(!this._isFlip){
+                this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1] - 0.01*16/2,0.0]);
+            }else{
+                this._pVis.setProperty("pOffset", [this._pPos[0] - 0.01*32/2 - 0.01*16/2,this._pPos[1] - 0.01*16/2,0.0]);
+            }
+            this._pVis.setProperty("pFlip",this._isFlip);
+            
+            //this._pVis.setProperty("pOffset", [0.0,0.0,0.0]);
             if(this._wiTimeToDespawn){
                 this.destroy();
             }

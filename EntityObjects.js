@@ -85,6 +85,10 @@ export class Player extends BaseEntity{
         //A
     }
 
+    getRealVect(){
+        return this._pRealVect;
+    }
+
     update(){
         this._pPos[0] += this._pRealVect[0] * this._pCurVel;
         this._pPos[1] += this._pRealVect[1] * this._pCurVel;

@@ -45,6 +45,7 @@ export class Card{
     setNewActiveObject(obj){
         this._cObject = obj;
         this._cText.changeObject(obj.name,obj.description);
+        this._cVisSprite = new SpriteController().getSpriteObject(obj.idSprite, 0.015);
     }
     
     getActiveObject(){

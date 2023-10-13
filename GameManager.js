@@ -46,14 +46,14 @@ class GameManager{
     }
 
     startCardSelection(){
-        this._mecIM.askSwapInputManager();
+        this._mecIM.askSwapInputManager('cardSelector');
         this._mecCs.displayCards(this._gameScreen);
         
         this._gameSelectingCards = true;
         this.swapPauseGame(undefined);
     }
     endCardSelection(){
-        this._mecIM.askSwapInputManager();
+        this._mecIM.askSwapInputManager('charController');
         this._mecCs.removeCards(this._gameScreen);
         
         //ORDRE IMPORTANT
@@ -190,6 +190,15 @@ class GameManager{
                     return eMin;
                 }
             }
+    }
+
+    getListEnemiesArea(collisionRectangle){
+        console.log(collisionRectangle);
+        return this._gmEnemies.filter(enemy => {
+            const ar = enemy[1].getPos();
+            return ar[0] >= collisionRectangle.x && ar[0] <= collisionRectangle.x + collisionRectangle.width &&
+                   ar[1] >= collisionRectangle.y && ar[1] <= collisionRectangle.y + collisionRectangle.height;
+          });
     }
 }
 
