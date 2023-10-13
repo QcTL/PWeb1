@@ -1,4 +1,5 @@
-import { EntityLineStrip, EntityOutLine } from "./GameEngine.js";
+import { EntityLineStrip, EntityOutLine, EntitySprite } from "./GameEngine.js";
+import { SpriteController } from "./SpriteController.js";
 
 export class Card{
     constructor(gm, i, objDisplay){
@@ -22,6 +23,12 @@ export class Card{
 
         this._cVisBack = new EntityOutLine([[0.7*i - 0.7,-0.3], [0.7*i - 0.7,0.6]],0.5);
         this._cVisCont = new EntityLineStrip(this._calculateInnerRectanglePoints(this._cRectangle, 0.03));
+        this._cVisSprite = new SpriteController().getSpriteObject(objDisplay.idSprite, 0.015);
+
+
+
+        this._cVisSprite.setProperty("pColor",[0.0,1.0,0.0,1.0]);
+        this._cVisSprite.setProperty("pOffset", [this._cRectangle.x + this._cRectangle.width/2 + this._cPos[0],this._cRectangle.y- this._cRectangle.height/2  + this._cPos[1],0]);
 
         this._cVisBack.setProperty("pColor",[0.0,0.0,0.0,1.0]);
         this._cVisBack.setProperty("pOffset", this._cPos);
@@ -72,6 +79,11 @@ export class Card{
         return this._cVisCont;
     }
 
+    getVisSprite(){
+        console.log(this._cVisSprite);
+        return this._cVisSprite;
+    }
+
     update(){
         if(this._cCardHovered){
             this._cPos[1] = Math.min(0.15, this._cPos[1] + 0.01);
@@ -79,6 +91,8 @@ export class Card{
             this._cPos[1] = Math.max(0.0, this._cPos[1] - 0.02); 
         }
         this._cText.update((((this._cTextRect.y  + this._cPos[1]) + 1) / 2) * (-1000) + 1000);
+        this._cVisSprite.setProperty("pOffset", [this._cRectangle.x + this._cRectangle.width/2 + this._cPos[0],this._cRectangle.y- this._cRectangle.height/2  + this._cPos[1],0]);
+
     }
 
     clearText(){

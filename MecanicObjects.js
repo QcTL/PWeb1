@@ -264,7 +264,7 @@ export class CardSelector{
             x => {
                 this._csListTickets.push(gs.addElement(x.getVisBack()));
                 this._csListTickets.push(gs.addElement(x.getVisCont()));
-                //this._csListTickets.push(gs.addElement(x.getVisElement()));
+                this._csListTickets.push(gs.addElement(x.getVisSprite()));
             });
         this._csIsActive = true; 
     }
