@@ -17,7 +17,7 @@ export class HordeSpawner{
             {
                 _hsSpawnRate: 1000,
                 _hsNSpawn : 1,
-                _hsTypeEnemy: 1,
+                _hsTypeEnemy: 2,
                 _hsLife: 1,
             },
             {
@@ -78,7 +78,7 @@ export class HordeSpawner{
             p = [varPos +  this._hsPlayer.getPos()[0],-this._hsDistK + this._hsPlayer.getPos()[1]];
         }
 
-        this._hsGameManager.addElementEnemy(this._hsDiffLevel, p,life);
+        this._hsGameManager.addElementEnemy(this._hsDiffLevel, p,life, type);
     }
 }
 

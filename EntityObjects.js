@@ -171,10 +171,10 @@ export class Point{
 }
 
 export class Enemy extends BaseEntity{
-    constructor(ge, player, life, pos = undefined){
-        let tPos = pos != undefined ? pos: [Math.random()*2 - 1,Math.random()*2 - 1,0]
+    constructor(ge, player, life, type, pos = undefined){
+        let tPos = pos != undefined ? pos : [Math.random()*2 - 1,Math.random()*2 - 1,0] 
         let _sPS = 0.01
-        super(ge,tPos,[0,0],[0,0],new SpriteController().getSpriteObject("ID_ENEMY1",_sPS),1,0.5)
+        super(ge,tPos,[0,0],[0,0],new SpriteController().getSpriteObject("ID_ENEMY" + type,_sPS),1,0.5);
         this._pVel = 0.005;
         this._pPlayer = player; 
         this._pPursuedBullet = false;
@@ -243,6 +243,11 @@ export class Enemy extends BaseEntity{
     }
 }
 
+/**
+ * Funció per normalitzar un vector
+ * @param {Array} vect - Vector a normalitzar
+ * Normalitza per referencia per evitar assignaments i creació de variables en cada cicle.
+ */
 export function normalizeVector(vect){
     const mag = Math.sqrt(vect[0]*vect[0] + vect[1]*vect[1]);
     if(mag != 0){

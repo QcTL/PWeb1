@@ -116,8 +116,8 @@ class GameManager{
         p.setTicket(t);
     }
 
-    addElementEnemy(diff, pos, life){
-        let p = new Enemy(this, this._gmPlayer,pos,life)
+    addElementEnemy(diff, pos, life, type){
+        let p = new Enemy(this, this._gmPlayer,life,type, pos)
         let t = this._gameScreen.addElement(p.getVis())
 
         this._gmEnemies.push([t,p]);
