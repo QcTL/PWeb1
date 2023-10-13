@@ -1,15 +1,23 @@
 import { Enemy, Player, Point } from "./EntityObjects.js";
 import { GameScreen } from "./GameEngine.js";
 import { CardSelector, HordeSpawner, InputManager, LifeCounter, PointCounter, Timer } from "./MecanicObjects.js";
+
+/**
+ * Objecte sobre el qual s'executarà l'aplicacio
+ */
 class GameManager{
     constructor(){
+
+        // Instenciem la RenderEngine
         this._gameScreen = new GameScreen(); 
 
         this._lvlProgression = [10,25,50,100,150,250,350,450];
 
+        //Controll de llistes dels elements presents en el joc actualment.
         this._gmEnemies = []
         this._gmBullets = []
         this._gmPoints = []
+
         this._gmPlayer = new Player(this);
 
         this._gameScreen.addElement(this._gmPlayer.getVis());
@@ -34,17 +42,24 @@ class GameManager{
         this._mecIM = new InputManager(this, this._gmPlayer.getController(), this._mecCs.getController());
 
         // KEY BINDS:
+            //Assignem la P al botò de pausa
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
 
         //DEBUG:
         //this.startCardSelection()
     }
 
+    /**
+     * Funcio que es crida per indicar que el joc ha finalitzat, parara tota l'execucio del mateix.
+     */
     endGame(){
         this._gameEnd = true;
         this.swapPauseGame(undefined);
     }
 
+    /**
+     * Funcio que comença el subproccés de selecció de cartes
+     */
     startCardSelection(){
         this._mecIM.askSwapInputManager();
         this._mecCs.displayCards(this._gameScreen);
@@ -52,6 +67,10 @@ class GameManager{
         this._gameSelectingCards = true;
         this.swapPauseGame(undefined);
     }
+    
+    /**
+     * Funcio per acavar el subproccés de selecció de cartes
+     */
     endCardSelection(){
         this._mecIM.askSwapInputManager();
         this._mecCs.removeCards(this._gameScreen);
@@ -61,7 +80,9 @@ class GameManager{
         this._gameSelectingCards = false;
     }
 
-
+    /**
+     * Funcio per canviar el estat del joc de pausat a actiu i viceversa.
+     */
     swapPauseGame(e){
         if((e != undefined && e.key == 'p' && !this._gameEnd) || this._gameSelectingCards || this._gameEnd){
             this._gamePaused = !this._gamePaused;
@@ -76,6 +97,12 @@ class GameManager{
         }
     }
 
+   /**
+     * Donat punts indica si esta dins de qualsevol altre enemic
+     * @param {Int} pX - posició X
+     * @param {Int} pY - posició Y
+     * @param {Enemy} pSelf - referencia a ell mateix per detectar la col·lisió autoreferencial.
+     */
     isInsideAny(pX,pY, pSelf){
         for(let i = 0; i < this._gmEnemies.length; i++){ 
             if(((pX > this._gmEnemies[i][1].getPos()[0] - this._gmEnemies[i][1].getSize()/2
@@ -89,6 +116,9 @@ class GameManager{
         return false;
     }
 
+   /**
+     * Funcio quee crida el metode de actualtizar per tots els elements actius per pantalla.
+     */
     update(){
         if(!this._gamePaused && !this._gameSelectingCards && !this._gameEnd){
             this._gmEnemies.forEach(x => x[1].update());
@@ -99,6 +129,9 @@ class GameManager{
             this._mecCs.update();
         }
     }
+
+
+    // FUNCIONS PER AFEGUIR DIFERENTS ELEMENTS DINS DEL GAME MANAGER
 
     addElementBullet(b){                    
         
@@ -128,6 +161,9 @@ class GameManager{
         this._gmPlayer.addObject(obj);
     }
 
+
+    // FUNCIONS PER ELIMINAR DIFERENTS ELEMENTS DINS DEL GAME MANAGER
+
     removeElement(vTicket,type){
         this._gameScreen.removeElement(vTicket);
         let lList = undefined;
@@ -149,8 +185,10 @@ class GameManager{
         }
     }
 
+    /**
+     * Bucle principal de l'execució de l'aplicació
+     */
     mainLoop(){
-        //"START" del main loop
         this._gameScreen.mainLoop();
 
         requestAnimationFrame(this._sMainLoop.bind(this));
@@ -163,6 +201,10 @@ class GameManager{
             requestAnimationFrame(this._sMainLoop.bind(this));
     }
 
+    /**
+     * Donat un vector retorna l'enemic més proper que no esta siguent perseguit per un projectil
+     * @param {Array} - Vector de 2 elements referents a la posició [X,Y]
+     */
     getClosestEnemy(p){
         //Aquest l'hem de tenir aqui a causa que el GM es el que te el llistat de tots els enemics per triar el mes aprop
         if(this._gmEnemies.length > 0){
@@ -193,15 +235,8 @@ class GameManager{
     }
 }
 
-//let gm = new GameScreen();
-//let t1 = new EntityOutLine([[0.0,0.0,0.0],[0.1,0.1,0.0]],0.01);
-//gm.addElement(t1);
-//let t2 = new EntityOutLine([[0.1,0.1,0.0],[-0.1,0.1,0.0]],0.01);
-//gm.addElement(t2);
 
-//let t1 = new EntityOutLine([[0.0,0.4,0.0],[0.1,0.1,0.0],[0.2,0.2,0.0],[-0.1,0.1,0.0]],0.01);
-//gm.addElement(t1);
-//gm.mainLoop();
+// MAIN EXECUTION:
 
 let gm = new GameManager();
 gm.mainLoop();

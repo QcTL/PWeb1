@@ -11,6 +11,9 @@ export class SpriteController{
         return this;
     }
 
+    /**
+     * Carrega en memoria de la classe la informacio que descriu els sprites
+     */
     loadSprites(){
         this.pS=   [0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,
                     0,1,1,1,0,0,1,1,0,0,1,1,1,1,1,1,
@@ -48,6 +51,12 @@ export class SpriteController{
         this.pE1Size = [16,16];
     }
 
+    /**
+     * Otorga objectes Entity donat la Id i la mida
+     * @param {String} idS - El id del Sprite que es vol mostrar
+     * @param {Float} sSize - La mida que tindra cada bloc del objecte a mostrar
+     * @returns {EntitySprite} EntitySprite - Una classe mostrable
+     */
     getSpriteObject(idS, sSize){
         switch (idS) {
             case "ID_PLAYER":
