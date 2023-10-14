@@ -245,9 +245,7 @@ export class CardSelector{
     }
 
     setClickPos(v){
-        console.log(v);
         this._csActiveCard = this._csListCards.find(x=> x.isPointInside(v));
-        console.log("PRESSED CARD" + this._csActiveCard)
         this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
         this._csGameManager.endCardSelection();
         
@@ -255,8 +253,14 @@ export class CardSelector{
         // Todo, eliminar del possible quin s'hagui seleccionat
         this._csCurrSelecteds = []
 
-        this._csListCards.forEach(x => x.setNewActiveObject(this.selectOneRandomValidObject()));
+        this._csPresentObjectsId.push(this._csActiveCard.getActiveObject());
         this._csPossObjects = this._csPossObjects.filter(x => x !== this._csActiveCard.getActiveObject());
+
+        this._csListCards.forEach(x => {
+            var obj = this.selectOneRandomValidObject();
+            console.log(obj);
+            x.setNewActiveObject(obj);
+        });
     }
 
     displayCards(gs){

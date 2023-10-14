@@ -23,7 +23,7 @@ export class Card{
 
         this._cVisBack = new EntityOutLine([[0.7*i - 0.7,-0.3], [0.7*i - 0.7,0.6]],0.5);
         this._cVisCont = new EntityLineStrip(this._calculateInnerRectanglePoints(this._cRectangle, 0.03));
-        this._cVisSprite = new SpriteController().getSpriteObject(objDisplay.idSprite, 0.015);
+        this._cVisSprite = new SpriteController().getSpriteObject(objDisplay.idSprite != undefined? objDisplay.idSprite: "ID_SPR_UPGRADE", 0.015);
 
 
 
@@ -45,7 +45,9 @@ export class Card{
     setNewActiveObject(obj){
         this._cObject = obj;
         this._cText.changeObject(obj.name,obj.description);
-        this._cVisSprite = new SpriteController().getSpriteObject(obj.idSprite, 0.015);
+        this._cVisSprite = new SpriteController().getSpriteObject(obj.idSprite != undefined? obj.idSprite: "ID_SPR_UPGRADE", 0.015);
+        this._cVisSprite.setProperty("pColor",[0.0,1.0,0.0,1.0]);
+        this._cVisSprite.setProperty("pOffset", [this._cRectangle.x + this._cRectangle.width/2 + this._cPos[0],this._cRectangle.y- this._cRectangle.height/2  + this._cPos[1],0]);
     }
     
     getActiveObject(){
@@ -81,7 +83,6 @@ export class Card{
     }
 
     getVisSprite(){
-        console.log(this._cVisSprite);
         return this._cVisSprite;
     }
 
@@ -124,7 +125,6 @@ export class Card{
 
 class TextCard{
     constructor(gm,txtName, txtDes, rectPos) {
-        console.log(rectPos);
         this._tcTxtName = txtName;
         this._tcTxtDes = txtDes;
         this._tcGameManager = gm;

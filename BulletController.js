@@ -9,8 +9,8 @@ export class BulletSpawner{
         this._bsPlayer = parent;
         this._bsPause = false;
 
-        //this._bsListProjectiles = [ new BulletContainer(gm, parent)];
-        this._bsListProjectiles = [ new WhipContainer(gm, parent)];
+        this._bsListProjectiles = [ new BulletContainer(gm, parent)];
+        //this._bsListProjectiles = [ new WhipContainer(gm, parent)];
         this._bsListProjectilesId = [0];
     }
 
@@ -29,7 +29,6 @@ export class BulletSpawner{
                 break;
                 case 1:
                     objElement = new WhipContainer(this._bsGameManager,this._bsPlayer);
-                    console.log("AFEGUIT ITEM");
                 break;
                 case 3:
                     objElement = new BulletContainer(this._bsGameManager,this._bsPlayer);
@@ -65,7 +64,6 @@ export class BulletSpawner{
     }
 
     recursiveShooting(proj){
-        console.log(proj)
         for(let i = 0; i < proj.getQuant(); i += 1){
             if(!this._bsPause && proj.canSpawn())
                 this.shootEnemy(proj);
@@ -194,7 +192,6 @@ class WhipContainer extends ObjectProjectile{
             this._wiCollisonRectangle.y = this._pPos[1] -  0.01*20/2;
 
             var sEnemies = this._gameManager.getListEnemiesArea(this._wiCollisonRectangle);
-            console.log(sEnemies);
             sEnemies.forEach(x => x[1].destroy());
             
             if(!this._isFlip){

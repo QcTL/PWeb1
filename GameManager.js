@@ -193,7 +193,6 @@ class GameManager{
     }
 
     getListEnemiesArea(collisionRectangle){
-        console.log(collisionRectangle);
         return this._gmEnemies.filter(enemy => {
             const ar = enemy[1].getPos();
             return ar[0] >= collisionRectangle.x && ar[0] <= collisionRectangle.x + collisionRectangle.width &&
