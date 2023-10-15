@@ -6,6 +6,7 @@ class GameManager{
         this._gameScreen = new GameScreen(); 
 
         this._lvlProgression = [10,25,50,100,150,250,350,450];
+        //this._lvlProgression = [1,1,1,1,1,1,1,1];
 
         this._gmEnemies = []
         this._gmBullets = []

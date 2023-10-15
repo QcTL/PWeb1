@@ -49,7 +49,40 @@ const dataArray = [
         idSprite: undefined,
         listPrereq: [3] 
     },
-
+    { 
+        id: 5, 
+        name: 'Whip ++', 
+        description: 'The oddor is \n more potent', 
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 1,
+            valueToIncrement: "freq",
+            increment: -200
+        },
+        idSprite: undefined, 
+        listPrereq: [1,2] 
+    },   
+    { 
+        id: 6, 
+        name: 'Magic Wand +', 
+        description: '\n', 
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 0,
+            valueToIncrement: "freq",
+            increment: -200
+        },
+        idSprite: undefined, 
+        listPrereq: [1,5] 
+    },
+    { 
+        id: 7, 
+        name: 'Light form above', 
+        description: 'The sky keeps \n calling my name', 
+        type: 'PROJECTILE',
+        idSprite: 'ID_SPR_LIGHT', 
+        listPrereq: [] 
+    },
 ];
 
 export {dataArray};

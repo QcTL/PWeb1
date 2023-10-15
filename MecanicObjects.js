@@ -190,7 +190,7 @@ export class CardSelector{
     constructor(gm) {
         this._csGameManager = gm;
 
-        this._csPresentObjectsId = [];
+        this._csPresentObjectsId = [0];
         this._csPossObjects = dataArray;
         this._csCurrSelecteds = [];
 

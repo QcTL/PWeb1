@@ -10,7 +10,6 @@ export class BulletSpawner{
         this._bsPause = false;
 
         this._bsListProjectiles = [ new BulletContainer(gm, parent)];
-        //this._bsListProjectiles = [ new WhipContainer(gm, parent)];
         this._bsListProjectilesId = [0];
     }
 
@@ -19,8 +18,6 @@ export class BulletSpawner{
     }
 
     addObject(objSpawner){
-        //this._bsListProjectiles.push(objSpawner);
-        //this.recursiveShooting(objSpawner);
         var objElement = undefined
         if(objSpawner.type == 'PROJECTILE'){
             switch(objSpawner.id){
@@ -31,23 +28,27 @@ export class BulletSpawner{
                     objElement = new WhipContainer(this._bsGameManager,this._bsPlayer);
                 break;
                 case 3:
-                    objElement = new BulletContainer(this._bsGameManager,this._bsPlayer);
+                    objElement = new FlaskContainer(this._bsGameManager,this._bsPlayer);
                 break;
             }
             this._bsListProjectilesId.push(objSpawner.id);
+            this._bsListProjectiles.push(objElement);
             this.recursiveShooting(objElement);
         }else{
-            this.applyUpgrade(objSpawner, this._bsListProjectiles[this._bsListProjectilesId.indexOf(objSpawner.upgradeElement.idToUpgrade)]);
+            var indexProjectile = this._bsListProjectilesId.indexOf(objSpawner.upgradeElement.idToUpgrade);
+            this.applyUpgrade(objSpawner, this._bsListProjectiles[indexProjectile]);
         }  
     }
 
     applyUpgrade(obj, container){
+        console.log(container);
         switch(obj.upgradeElement.valueToIncrement){
             case 'duration':
                 container.changeDuration(obj.upgradeElement.increment);
             break;
             case 'freq':
                 container.changeFreq(obj.upgradeElement.increment);
+                console.log("AUGMENTED!!!");
             break;
             case 'quantity':
                 container.changeQuantity(obj.upgradeElement.increment);
@@ -56,7 +57,7 @@ export class BulletSpawner{
     }
 
     shootEnemy(proj){
-        this._bsGameManager.addElementBullet(proj.getInstance()); //TODO COMPLETE
+        this._bsGameManager.addElementBullet(proj.getInstance());
     }
 
     setPause(v){
@@ -146,6 +147,61 @@ class InstObjectProjectile{
 }
 
 
+
+class FlaskContainer extends ObjectProjectile{
+    constructor(gm, player){
+        super(gm,player);
+    }
+
+    getInstance(){
+        var b = new this.FInst(this._gameManager, this._opPlayer);
+        return b;
+    }
+
+    FInst = class FlaskInst extends InstObjectProjectile{
+        constructor(gm,player){
+            super(gm,player);
+
+            //START VALUES
+            this._opForce = 0.7;
+            this._opDuration = 2000;
+            this._opFreq = 4000;
+
+            this._opCPoint = this._generateRandomPointInCircle(this._pPos,this._opForce);
+
+            this._wiCollisonRectangle = {
+                x: this._opCPoint [0] - 0.01* 16/2,
+                y: this._opCPoint [1] - 0.01* 16/2,
+                width: 0.01*100,
+                height: 0.01*100
+            };
+            this._pVis = new SpriteController().getSpriteObject("ID_ELE_FLASK",0.01);
+            this._pVis.setProperty("pOffset", [this._opCPoint[0],this._opCPoint[1],0.0]);
+
+            
+            this._wiTimeToDespawn = false;
+            setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
+        }
+
+        _generateRandomPointInCircle(posP , f) {
+            const angle = Math.random() * 2 * Math.PI;
+            const randomRadius = Math.sqrt(Math.random()) * f;
+            return [ posP[0] + randomRadius * Math.cos(angle), posP[1] + randomRadius * Math.sin(angle) ];
+        }
+          
+
+        update(){
+            var sEnemies = this._gameManager.getListEnemiesArea(this._wiCollisonRectangle);
+            sEnemies.forEach(x => x[1].destroy());
+
+            if(this._wiTimeToDespawn){
+                this.destroy();
+            }
+        }
+    }
+
+}
+
 class WhipContainer extends ObjectProjectile{
     constructor(gm, player){
         super(gm,player);
@@ -167,13 +223,6 @@ class WhipContainer extends ObjectProjectile{
                 height: 0.01*20  // height of the rectangle
             };
             this._pVis = new SpriteController().getSpriteObject("ID_ELE_WHIP",0.01);
-            /*this._pVis = new EntityLineStrip([0.0,0.0,0.0,
-                this._wiCollisonRectangle.width,0.0,0.0,
-                this._wiCollisonRectangle.width,this._wiCollisonRectangle.height,0.0,
-                0,this._wiCollisonRectangle.height,0.0,
-                
-                0,0,0.0,    
-            ])*/
             this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1]- 0.01*16/2,0.0]);
 
             this._pPos = this._iopPlayer.getPos();
@@ -217,7 +266,7 @@ class BulletContainer extends ObjectProjectile{
 
         //CANVIAR PER ACTUALITZAR ELS VALORS
         this._opFreq = 1000;
-        this._opQuant = 2;
+        this._opQuant = 1;
     }
 
     canSpawn(){
