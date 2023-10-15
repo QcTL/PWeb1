@@ -83,6 +83,14 @@ const dataArray = [
         idSprite: 'ID_SPR_LIGHT', 
         listPrereq: [] 
     },
+    { 
+        id: 8, 
+        name: 'Fire stick', 
+        description: 'The sweet warm \n of the common fire', 
+        type: 'PROJECTILE',
+        idSprite: 'ID_SPR_LIGHT', 
+        listPrereq: [] 
+    },
 ];
 
 export {dataArray};
