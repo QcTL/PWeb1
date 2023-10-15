@@ -31,9 +31,28 @@ canvas{
     width: 80vw;
     background-color: #390947;
     margin-top: 20px;
-    border-radius: 20px;
+    border-radius: 20px 0px 0px 20px;
     padding: 20px;
     padding-left: 30px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.iInforme{
+    margin-top: 20px;
+    background-color: #390947;
+    padding: 20px;
+    border-radius: 0px 20px 20px 0px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.imgInforme{
+    margin-top: 50px;
+    max-width: 450px;
+    max-height: 450px;
+    border-radius: 20px;
 }
 
 .container {

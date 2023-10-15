@@ -145,9 +145,9 @@ export class Timer{
             const formattedTime = this._padZero(minutes) + ':' + this._padZero(seconds);
         
             this.drawText(formattedTime);
-        } else if(this._tTotalSeconds < 0) {
+        } else if(this._tTotalSeconds <= 0) {
           clearInterval(this._tintId);
-          console.log('Timer finished!');
+          this._tGameManager.wonGame();
         }
       }
     
@@ -160,8 +160,30 @@ export class Timer{
     
       _padZero(num) {
         return (num < 10 ? '0' : '') + num;
-      }
-      
+      }  
+}
+
+export class ShowTextGUI{
+    constructor(gm,txt, pos, size) {
+        this._pcGameManager = gm;
+        this._pcCanvas = document.querySelector("#gCanvasText");
+        this._pcCtx = this._pcCanvas.getContext("2d");
+        this._pcValue = txt;
+        this._pcPos = pos;
+        this._pcSize = size;
+    }
+
+    showText() {
+        this._pcCtx.clearRect(this._pcPos[0], this._pcPos[1], this._pcPos[0] +  this._pcSize[0], this._pcPos[1] +  this._pcSize[1]);
+        this._pcCtx.font = 'bold 4em Montserrat';
+        this._pcCtx.fillStyle = 'white';
+        this._pcCtx.fillText(this._pcValue, this._pcPos[0], this._pcPos[1]);
+    }
+
+    changeValue(v){
+        this._pcValue = v;
+        this.showPoints();
+    }
 }
 
 export class LifeCounter{

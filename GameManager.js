@@ -1,12 +1,11 @@
 import { Enemy, Player, Point } from "./EntityObjects.js";
 import { GameScreen } from "./GameEngine.js";
-import { CardSelector, HordeSpawner, InputManager, LifeCounter, PointCounter, Timer } from "./MecanicObjects.js";
+import { CardSelector, HordeSpawner, InputManager, LifeCounter, PointCounter, ShowTextGUI, Timer } from "./MecanicObjects.js";
 class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 
 
         this._lvlProgression = [10,25,50,100,150,250,350,450];
-        //this._lvlProgression = [1,1,1,1,1,1,1,1];
 
         this._gmEnemies = []
         this._gmBullets = []
@@ -15,10 +14,13 @@ class GameManager{
 
         this._gameScreen.addElement(this._gmPlayer.getVis());
 
+
+        //STATES:
         this._gmGameLoop = true;
         this._gamePaused = false;
         this._gameSelectingCards = false;
         this._gameEnd = false;
+        this._gameWon = true;
 
         this._mecHS = new HordeSpawner(this, this._gmPlayer, 2);
 
@@ -36,14 +38,25 @@ class GameManager{
 
         // KEY BINDS:
         window.addEventListener('keydown',this.swapPauseGame.bind(this), false);
-
         //DEBUG:
         //this.startCardSelection()
     }
 
+    wonGame(){
+        this._gameWon = true;
+        this.swapPauseGame(undefined);
+        this._mecGameWon1 = new ShowTextGUI(this, "YOU WON!", [350,500], [300,300]);
+        this._mecGameWon1.showText();
+    }
+
+
     endGame(){
         this._gameEnd = true;
         this.swapPauseGame(undefined);
+        this._mecGameEnd1 = new ShowTextGUI(this, "YOU LOST", [350,500], [300,300]);
+        this._mecGameEnd2 = new ShowTextGUI(this, "F5 TO RETRY", [300,590], [300,300]);
+        this._mecGameEnd1.showText();
+        this._mecGameEnd2.showText();
     }
 
     startCardSelection(){
@@ -64,7 +77,7 @@ class GameManager{
 
 
     swapPauseGame(e){
-        if((e != undefined && e.key == 'p' && !this._gameEnd) || this._gameSelectingCards || this._gameEnd){
+        if((e != undefined && e.key == 'p' && !this._gameEnd) || this._gameSelectingCards || this._gameEnd || this._gameWon){
             this._gamePaused = !this._gamePaused;
             this._gmPlayer.setPause(this._gamePaused);
             this._mecHS.setPause(this._gamePaused)
