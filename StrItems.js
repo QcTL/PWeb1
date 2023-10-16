@@ -127,7 +127,7 @@ const dataArray = [
             increment: -500
         },
         idSprite: undefined, 
-        listPrereq: [0] 
+        listPrereq: [0,6] 
     }
 ];
 
