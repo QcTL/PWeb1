@@ -32,7 +32,6 @@ export class BulletSpawner{
                 break;
                 case 8:
                     objElement = new FireStickContainer(this._bsGameManager,this._bsPlayer);
-                    console.log("ADDED FIRE FIRE");
                 break;
             }
             this._bsListProjectilesId.push(objSpawner.id);
@@ -45,14 +44,12 @@ export class BulletSpawner{
     }
 
     applyUpgrade(obj, container){
-        console.log(container);
         switch(obj.upgradeElement.valueToIncrement){
             case 'duration':
                 container.changeDuration(obj.upgradeElement.increment);
             break;
             case 'freq':
                 container.changeFreq(obj.upgradeElement.increment);
-                console.log("AUGMENTED!!!");
             break;
             case 'quantity':
                 container.changeQuantity(obj.upgradeElement.increment);
@@ -61,7 +58,6 @@ export class BulletSpawner{
     }
 
     shootEnemy(proj){
-        console.log(proj)
         proj.shoot();
     }
 
@@ -351,7 +347,6 @@ class FireStickContainer extends ObjectProjectile{
         //Angle Inicial
         const rA = Math.random() * 2 * Math.PI; 
         var r = this._generateUnitaryVectors(0.2,[Math.cos(rA),Math.sin(rA)], this._opQuant);
-        console.log(r);
         r.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)));
     }
 
@@ -384,7 +379,6 @@ class FireStickContainer extends ObjectProjectile{
 
     getInstance(vStart){
         var b = new this.FSInst(this._gameManager, this._opPlayer, vStart);
-        console.log("INSTANCIA FIRE");
         return b;
     }
 
@@ -418,8 +412,6 @@ class FireStickContainer extends ObjectProjectile{
         }
 
         update(){
-
-            console.log(this._pPos);
             this._pPos[0] += this._pDir[0] * this._pVel;
             this._pPos[1] += this._pDir[1] * this._pVel;
             this._fsCollisonRectangle.x = this._pPos[0]- 0.01*10/2;
@@ -432,7 +424,6 @@ class FireStickContainer extends ObjectProjectile{
             this._fsActiveFrames += 10;
             
             const prog = this._fsActiveFrames / this._opDuration;
-            console.log(prog);
             this._pVis.setProperty("pColor",[0.9176 + (1-0.9176) * prog,0.3843 + (0.7215-0.3843) * prog,0.3843 + (0.4745-0.3843) * prog,1.0]);
 
 

@@ -280,7 +280,6 @@ export class CardSelector{
 
         this._csListCards.forEach(x => {
             var obj = this.selectOneRandomValidObject();
-            console.log(obj);
             x.setNewActiveObject(obj);
         });
     }
@@ -308,7 +307,6 @@ export class CardSelector{
                     x.update();
                     if(x.isPointInside(this._csMousePosition)){
                         x.setActive();
-                        //console.log("HELLO")
                     }else{x.setOff();}
                 }); 
                 //Es podria optimitzar, comprovar si es dins o estas actiu, i si ho estas torna a comprovar per si hauries de deixar-ho d'estar

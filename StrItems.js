@@ -73,7 +73,7 @@ const dataArray = [
             increment: -200
         },
         idSprite: undefined, 
-        listPrereq: [1,5] 
+        listPrereq: [0] 
     },
     { 
         id: 7, 
@@ -116,6 +116,19 @@ const dataArray = [
         idSprite: undefined,
         listPrereq: [3] 
     },
+    { 
+        id: 11, 
+        name: 'Magic Wand ++', 
+        description: '+ Freq \n Magic powered \n sub-machine', 
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 0,
+            valueToIncrement: "freq",
+            increment: -500
+        },
+        idSprite: undefined, 
+        listPrereq: [0] 
+    }
 ];
 
 export {dataArray};

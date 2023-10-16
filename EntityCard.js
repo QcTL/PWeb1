@@ -32,8 +32,8 @@ export class Card{
 
         this._cVisBack.setProperty("pColor",[0.0,0.0,0.0,1.0]);
         this._cVisBack.setProperty("pOffset", this._cPos);
-   
-        this._cVisCont.setProperty("pColor",[0.2902,0.1882,0.3216,1.0]);
+
+        this._cVisCont.setProperty("pColor",objDisplay.type  == "PROJECTILE" ? [0.2902,0.1882,0.3216,1.0] : [0.4274,0.502,0.9804,1.0]);
         this._cVisCont.setProperty("pOffset", this._cPos);
 
         //TEXT
@@ -48,6 +48,8 @@ export class Card{
         this._cVisSprite = new SpriteController().getSpriteObject(obj.idSprite != undefined? obj.idSprite: "ID_SPR_UPGRADE", 0.015);
         this._cVisSprite.setProperty("pColor",[0.0,1.0,0.0,1.0]);
         this._cVisSprite.setProperty("pOffset", [this._cRectangle.x + this._cRectangle.width/2 + this._cPos[0],this._cRectangle.y- this._cRectangle.height/2  + this._cPos[1],0]);
+        
+        this._cVisCont.setProperty("pColor",obj.type  == "PROJECTILE" ? [0.2902,0.1882,0.3216,1.0] : [0.4274,0.502,0.9804,1.0]);
     }
     
     getActiveObject(){
