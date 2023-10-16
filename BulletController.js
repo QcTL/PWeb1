@@ -30,6 +30,10 @@ export class BulletSpawner{
                 case 3:
                     objElement = new FlaskContainer(this._bsGameManager,this._bsPlayer);
                 break;
+                case 8:
+                    objElement = new FireStickContainer(this._bsGameManager,this._bsPlayer);
+                    console.log("ADDED FIRE FIRE");
+                break;
             }
             this._bsListProjectilesId.push(objSpawner.id);
             this._bsListProjectiles.push(objElement);
@@ -172,12 +176,12 @@ class FlaskContainer extends ObjectProjectile{
             this._wiCollisonRectangle = {
                 x: this._opCPoint [0] - 0.01* 16/2,
                 y: this._opCPoint [1] - 0.01* 16/2,
-                width: 0.01*100,
-                height: 0.01*100
+                width: 0.01*16,
+                height: 0.01*16
             };
             this._pVis = new SpriteController().getSpriteObject("ID_ELE_FLASK",0.01);
             this._pVis.setProperty("pOffset", [this._opCPoint[0],this._opCPoint[1],0.0]);
-
+            this._pVis.setProperty("pColor",[1,0.7215,0.4745,1.0]);
             
             this._wiTimeToDespawn = false;
             setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
@@ -224,6 +228,7 @@ class WhipContainer extends ObjectProjectile{
             };
             this._pVis = new SpriteController().getSpriteObject("ID_ELE_WHIP",0.01);
             this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1]- 0.01*16/2,0.0]);
+            this._pVis.setProperty("pColor",[0.4588,0.0901,0.3372,1.0]);
 
             this._pPos = this._iopPlayer.getPos();
             this._wiTimeToDespawn = false;
@@ -287,8 +292,9 @@ class BulletContainer extends ObjectProjectile{
             this._pDir = [0,0];
             this._pVel = 0.01;
             this._pSize = 0.03;
-            this._pVis = new EntityRegularPoligon(6,this._pSize);
-            this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1] - (this._pSize)/2,0.0])
+            this._pVis = new EntityRegularPoligon(3,this._pSize);
+            this._pVis.setProperty("pOffset", [this._pPos[0] - (this._pSize )/2,this._pPos[1] - (this._pSize)/2,0.0]);
+            this._pVis.setProperty("pColor",[0.6392,0.1569,0.3451,1.0]);
         }
         
         setEnemy(enemy){
@@ -315,6 +321,85 @@ class BulletContainer extends ObjectProjectile{
         }
     }
 }
+
+class FireStickContainer extends ObjectProjectile{
+    constructor(gm, player){
+        super(gm,player);
+        this._bcNextEnemy = undefined;
+
+        //CANVIAR PER ACTUALITZAR ELS VALORS
+        this._opFreq = 2000;
+        this._opQuant = 1;
+    }
+
+    canSpawn(){
+        return true;
+    }
+
+    getInstance(){
+        var b = new this.FSInst(this._gameManager, this._opPlayer);
+        console.log("INSTANCIA FIRE");
+        return b;
+    }
+
+    FSInst = class FireStickInst extends InstObjectProjectile{
+        constructor(gm,player){
+            super(gm,player);
+            this._pPos = [...this._iopPlayer.getPos()];
+
+            this._fsCollisonRectangle = {
+                x: this._pPos[0]- 0.01*10/2,
+                y: this._pPos[1]- 0.01*10/2,
+                width: 0.01*10,
+                height: 0.01*10
+            };
+
+            this._pDir = (() => {
+                const angle = Math.random() * 2 * Math.PI;
+                return [Math.cos(angle), Math.sin(angle)];
+              })();
+
+            this._pVel = 0.01;
+            this._opDuration = 1000;
+
+            this._pVis = new SpriteController().getSpriteObject("ID_ELE_FIRE",0.01);
+
+            this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0]);
+            this._pVis.setProperty("pColor",[0.9176 + (1-0.9176),0.3843 + (0.7215-0.3843),0.3843 + (0.4745-0.3843),1.0]);
+
+            this._wiTimeToDespawn = false;
+
+            setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
+
+            this._fsActiveFrames = 0
+        }
+
+        update(){
+
+            console.log(this._pPos);
+            this._pPos[0] += this._pDir[0] * this._pVel;
+            this._pPos[1] += this._pDir[1] * this._pVel;
+            this._fsCollisonRectangle.x = this._pPos[0]- 0.01*10/2;
+            this._fsCollisonRectangle.y = this._pPos[1]- 0.01*10/2;
+           
+            var sEnemies = this._gameManager.getListEnemiesArea(this._fsCollisonRectangle);
+            sEnemies.forEach(x => x[1].destroy());
+            
+            this._pVis.setProperty("pOffset", [this._pPos[0],this._pPos[1],0.0]);
+            this._fsActiveFrames += 10;
+            
+            const prog = this._fsActiveFrames / this._opDuration;
+            console.log(prog);
+            this._pVis.setProperty("pColor",[0.9176 + (1-0.9176) * prog,0.3843 + (0.7215-0.3843) * prog,0.3843 + (0.4745-0.3843) * prog,1.0]);
+
+
+            if(this._wiTimeToDespawn){
+                this.destroy();
+            }
+        }
+    }
+}
+
 
 function closestEnemy(gm, b){
     return gm.getClosestEnemy(b);

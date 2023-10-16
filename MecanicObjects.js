@@ -27,14 +27,14 @@ export class HordeSpawner{
                 _hsLife: 1,
             },{
                 _hsSpawnRate: 1000,
-                _hsNSpawn : 2,
+                _hsNSpawn : 3,
                 _hsTypeEnemy: 2,
-                _hsLife: 2,
+                _hsLife: 1,
             },{
-                _hsSpawnRate: 750,
-                _hsNSpawn : 2,
+                _hsSpawnRate: 850,
+                _hsNSpawn : 3,
                 _hsTypeEnemy: 2,
-                _hsLife: 2,
+                _hsLife: 1,
             },{
                 _hsSpawnRate: 500,
                 _hsNSpawn : 2,
@@ -42,7 +42,7 @@ export class HordeSpawner{
                 _hsLife: 2,   
             }
         ]
-        this._hsDiffLevelList = [20,30,60,100,];
+        this._hsDiffLevelList = [20,30,60,100,170];
         this._hsDiffLevel = 0;
         this.recursiveSpawning();
     }
