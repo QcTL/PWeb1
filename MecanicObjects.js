@@ -42,7 +42,7 @@ export class HordeSpawner{
                 _hsLife: 2,   
             }
         ]
-        this._hsDiffLevelList = [20,30,60,100,170];
+        this._hsDiffLevelList = [20,50,100,180,270];
         this._hsDiffLevel = 0;
         this.recursiveSpawning();
     }

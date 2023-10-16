@@ -343,7 +343,7 @@ class FireStickContainer extends ObjectProjectile{
     shoot(){
         //Angle Inicial
         const rA = Math.random() * 2 * Math.PI; 
-        var r = this._generateUnitaryVectors(0.2,[Math.cos(rA),Math.sin(rA)], 6);
+        var r = this._generateUnitaryVectors(0.2,[Math.cos(rA),Math.sin(rA)], this._opQuant);
         console.log(r);
         r.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)))
         

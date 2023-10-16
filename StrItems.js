@@ -96,12 +96,25 @@ const dataArray = [
         name: 'Fire stick +', 
         description: '+ Quant \n More fire \n per fire', 
         upgradeElement:  {
-            idToUpgrade: 0,
+            idToUpgrade: 8,
             valueToIncrement: "quantity",
             increment: 2
         },
         idSprite: undefined, 
         listPrereq: [8] 
+    }, 
+    { 
+        id: 10, 
+        name: 'Fire Potion ++', 
+        description: ' + Quant \n Locked and \n loaded',
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 3,
+            valueToIncrement: "quantity",
+            increment: 1
+        },
+        idSprite: undefined,
+        listPrereq: [3] 
     },
 ];
 
