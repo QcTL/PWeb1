@@ -18,7 +18,7 @@ const dataArray = [
     { 
         id: 2, 
         name: 'Whip +', 
-        description: 'The oddor is \n more potent', 
+        description: '+ Freq \n You start to get \n hang of it', 
         type: 'UPGRADE',
         upgradeElement:  {
             idToUpgrade: 1,
@@ -39,7 +39,7 @@ const dataArray = [
     { 
         id: 4, 
         name: 'Fire Potion +', 
-        description: 'Filled to \n the brim',
+        description: ' + Duration \n Filled to \n the brim',
         type: 'UPGRADE',
         upgradeElement:  {
             idToUpgrade: 3,
@@ -52,12 +52,12 @@ const dataArray = [
     { 
         id: 5, 
         name: 'Whip ++', 
-        description: 'The oddor is \n more potent', 
+        description: '+ Quant \n Where did you \n find another one?', 
         type: 'UPGRADE',
         upgradeElement:  {
             idToUpgrade: 1,
-            valueToIncrement: "freq",
-            increment: -200
+            valueToIncrement: "quantity",
+            increment: 1
         },
         idSprite: undefined, 
         listPrereq: [1,2] 
@@ -90,6 +90,18 @@ const dataArray = [
         type: 'PROJECTILE',
         idSprite: 'ID_SPR_FIRE', 
         listPrereq: [] 
+    },
+    { 
+        id: 9, 
+        name: 'Fire stick +', 
+        description: '+ Quant \n More fire \n per fire', 
+        upgradeElement:  {
+            idToUpgrade: 0,
+            valueToIncrement: "quantity",
+            increment: 2
+        },
+        idSprite: undefined, 
+        listPrereq: [8] 
     },
 ];
 

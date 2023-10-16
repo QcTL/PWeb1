@@ -158,6 +158,7 @@ class InstObjectProjectile{
 class FlaskContainer extends ObjectProjectile{
     constructor(gm, player){
         super(gm,player);
+        this._opFreq = 4000;
     }
 
     getInstance(){
@@ -172,7 +173,6 @@ class FlaskContainer extends ObjectProjectile{
             //START VALUES
             this._opForce = 0.7;
             this._opDuration = 2000;
-            this._opFreq = 4000;
 
             this._opCPoint = this._generateRandomPointInCircle(this._pPos,this._opForce);
 

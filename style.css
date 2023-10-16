@@ -53,6 +53,7 @@ canvas{
     max-width: 450px;
     max-height: 450px;
     border-radius: 20px;
+    border: 7px solid #1f102a;
 }
 
 .container {
