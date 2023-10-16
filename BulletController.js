@@ -61,7 +61,8 @@ export class BulletSpawner{
     }
 
     shootEnemy(proj){
-        this._bsGameManager.addElementBullet(proj.getInstance());
+        console.log(proj)
+        proj.shoot();
     }
 
     setPause(v){
@@ -69,10 +70,9 @@ export class BulletSpawner{
     }
 
     recursiveShooting(proj){
-        for(let i = 0; i < proj.getQuant(); i += 1){
-            if(!this._bsPause && proj.canSpawn())
-                this.shootEnemy(proj);
-        }
+        if(!this._bsPause && proj.canSpawn())
+            this.shootEnemy(proj);
+    
         if(this._bsIsShooting)
             setTimeout(()=> this.recursiveShooting(proj),proj.getFreq());
     }
@@ -87,6 +87,11 @@ class ObjectProjectile{
         this._opDuration = 1000;
         this._opFreq = 1000;
         this._opQuant = 1;
+    }
+
+    shoot(){
+        for (let i = 0; i < this._opQuant; i++)
+            this._gameManager.addElementBullet(this.getInstance());
     }
 
     changeDuration(v){
@@ -149,8 +154,6 @@ class InstObjectProjectile{
         return this._pVis;
     }
 }
-
-
 
 class FlaskContainer extends ObjectProjectile{
     constructor(gm, player){
@@ -285,6 +288,7 @@ class BulletContainer extends ObjectProjectile{
         return b;
     }
 
+
     BInst = class BulletInst extends InstObjectProjectile{
         constructor(gm,player){
             super(gm,player);
@@ -336,14 +340,50 @@ class FireStickContainer extends ObjectProjectile{
         return true;
     }
 
-    getInstance(){
-        var b = new this.FSInst(this._gameManager, this._opPlayer);
+    shoot(){
+        //Angle Inicial
+        const rA = Math.random() * 2 * Math.PI; 
+        var r = this._generateUnitaryVectors(0.2,[Math.cos(rA),Math.sin(rA)], 6);
+        console.log(r);
+        r.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)))
+        
+    }
+
+    _generateUnitaryVectors(thetaOffset, thetaStart, numProjectiles) {
+        // Calculate the increment angle between projectiles
+        const incrementAngle = (2 * thetaOffset) / (numProjectiles - 1);
+      
+        // Calculate the rotation matrix based on the normalized start vector
+        const rotationMatrix = [
+          [Math.cos(incrementAngle), -Math.sin(incrementAngle)],
+          [Math.sin(incrementAngle), Math.cos(incrementAngle)]
+        ];
+      
+        // Initialize an array to store the unitary vectors
+        const unitaryVectors = [];
+      
+        // Calculate the initial vector based on the normalized start vector
+        let currentVector = thetaStart;
+      
+        for (let i = 0; i < numProjectiles; i++) {
+          unitaryVectors.push(currentVector);
+          // Rotate the current vector for the next projectile
+          const x = currentVector[0] * rotationMatrix[0][0] + currentVector[1] * rotationMatrix[0][1];
+          const y = currentVector[0] * rotationMatrix[1][0] + currentVector[1] * rotationMatrix[1][1];
+          currentVector = [x, y];
+        }
+      
+        return unitaryVectors;
+    }
+
+    getInstance(vStart){
+        var b = new this.FSInst(this._gameManager, this._opPlayer, vStart);
         console.log("INSTANCIA FIRE");
         return b;
     }
 
     FSInst = class FireStickInst extends InstObjectProjectile{
-        constructor(gm,player){
+        constructor(gm,player, pDirVector ){
             super(gm,player);
             this._pPos = [...this._iopPlayer.getPos()];
 
@@ -354,10 +394,7 @@ class FireStickContainer extends ObjectProjectile{
                 height: 0.01*10
             };
 
-            this._pDir = (() => {
-                const angle = Math.random() * 2 * Math.PI;
-                return [Math.cos(angle), Math.sin(angle)];
-              })();
+            this._pDir = pDirVector;
 
             this._pVel = 0.01;
             this._opDuration = 1000;
