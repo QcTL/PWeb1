@@ -212,25 +212,34 @@ class FlaskContainer extends ObjectProjectile{
 class WhipContainer extends ObjectProjectile{
     constructor(gm, player){
         super(gm,player);
+        this._opDuration = 2000;
     }
 
-    getInstance(){
-        var b = new this.WInst(this._gameManager, this._opPlayer);
+    shoot(){
+        for (let i = 0; i < this._opQuant; i++)
+            this._gameManager.addElementBullet(this.getInstance(i));
+    }
+
+    getInstance(pWip){
+        var b = new this.WInst(this._gameManager, this._opPlayer, pWip);
         return b;
     }
 
     WInst = class WhipInst extends InstObjectProjectile{
-        constructor(gm,player){
+        constructor(gm,player, pWip){
             super(gm,player);
-            this._opDuration = 750;
+            this._opDuration = 500;
             this._wiCollisonRectangle = {
                 x: this._pPos[0] ,     // 
-                y: this._pPos[1] -  0.01*20/2,     // y-coordinate of the top-left corner
+                y: this._pPos[1] -  0.01*20/2 - this._pWip*0.1,   // y-coordinate of the top-left corner
                 width: 0.01*40, // width of the rectangle
                 height: 0.01*20  // height of the rectangle
             };
+
+            this._pWip = pWip;
+
             this._pVis = new SpriteController().getSpriteObject("ID_ELE_WHIP",0.01);
-            this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1]- 0.01*16/2,0.0]);
+            this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2, this._pPos[1]- 0.01*16/2 - this._pWip*0.1,0.0]);
             this._pVis.setProperty("pColor",[0.4588,0.0901,0.3372,1.0]);
 
             this._pPos = this._iopPlayer.getPos();
@@ -243,18 +252,16 @@ class WhipContainer extends ObjectProjectile{
         update(){
             this._pPos = this._iopPlayer.getPos();
             var res =  this._isFlip ? this._wiCollisonRectangle.width: 0;
-            //this._wiCollisonRectangle.x = this._pPos[0] - res;
-            //this._wiCollisonRectangle.y = this._pPos[1] - 0.2/2;
-            this._wiCollisonRectangle.x = this._pPos[0] - res;
+            this._wiCollisonRectangle.x = this._pPos[0] - res - this._pWip*0.1;
             this._wiCollisonRectangle.y = this._pPos[1] -  0.01*20/2;
 
             var sEnemies = this._gameManager.getListEnemiesArea(this._wiCollisonRectangle);
             sEnemies.forEach(x => x[1].destroy());
             
             if(!this._isFlip){
-                this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1] - 0.01*16/2,0.0]);
+                this._pVis.setProperty("pOffset", [this._pPos[0] + 0.01*32/2 + 0.01*16/2,this._pPos[1] - 0.01*16/2 - this._pWip*0.1,0.0]);
             }else{
-                this._pVis.setProperty("pOffset", [this._pPos[0] - 0.01*32/2 - 0.01*16/2,this._pPos[1] - 0.01*16/2,0.0]);
+                this._pVis.setProperty("pOffset", [this._pPos[0] - 0.01*32/2 - 0.01*16/2,this._pPos[1] - 0.01*16/2 - this._pWip*0.1,0.0]);
             }
             this._pVis.setProperty("pFlip",this._isFlip);
             
@@ -345,8 +352,7 @@ class FireStickContainer extends ObjectProjectile{
         const rA = Math.random() * 2 * Math.PI; 
         var r = this._generateUnitaryVectors(0.2,[Math.cos(rA),Math.sin(rA)], this._opQuant);
         console.log(r);
-        r.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)))
-        
+        r.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)));
     }
 
     _generateUnitaryVectors(thetaOffset, thetaStart, numProjectiles) {
