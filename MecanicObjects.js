@@ -55,7 +55,7 @@ class HordeSpawner{
                 this._hsDiffLevelList[this._hsDiffLevel] -= 1;
                 if(this._hsDiffLevelList[this._hsDiffLevel] < 0){
                     this._hsDif
-                    fLevel += 1;
+                    this._hsDiffLevel += 1;
                 }
             }
         }

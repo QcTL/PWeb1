@@ -2,7 +2,8 @@ class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 
 
-        this._lvlProgression = [5,10,15,30,50,100,150,250,350,450];
+        //this._lvlProgression = [5,10,15,30,50,100,150,250,350,450];
+        this._lvlProgression = [5,5,10,10,25,30,40,100,150,250,350,450];
 
         this._gmEnemies = []
         this._gmBullets = []
@@ -180,7 +181,6 @@ class GameManager{
             //:( O(N) per obtenir quin element es el que esta mes aprop? sino com es faria per tenir un ranking.
                 
                 //- Pot ser que es dispari una altre bala abans de que l'altre hagui impactat, si fan referencia al matiex, estara undefined quant l'altre l'elimini.
-                
                 function distEnemy(e) {
                     let dX=p[0] - e.getPos()[0];
                     let dY=p[1] - e.getPos()[1];

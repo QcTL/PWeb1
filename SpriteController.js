@@ -1,5 +1,8 @@
 class SpriteController{
     constructor(){
+
+        // Definció singleton, per no tenir en la mateixa classe tots els
+        // Elements definits per "pixels". 
         if(typeof SpriteController.instance === "object"){
             return SpriteController.instance;
         }
@@ -247,6 +250,7 @@ class SpriteController{
 
     getSpriteObject(idS, sSize){
         switch (idS) {
+                // SPRITES
             case "ID_PLAYER":
                 return new EntitySprite(this.pS, this.pSSize[0], this.pSSize[1], sSize);
             case "ID_ENEMY1":
@@ -254,7 +258,7 @@ class SpriteController{
             case "ID_ENEMY2":
                 return new EntitySprite(this.pE2, this.pE2Size[0], this.pE2Size[1], sSize);
 
-            // ICONS
+                // ICONS
             case "ID_SPR_WAND":
                 return new EntitySprite(this.pO0, this.pO0Size[0], this.pO0Size[1], sSize);
             case "ID_SPR_SPLASH":
@@ -265,7 +269,8 @@ class SpriteController{
                 return new EntitySprite(this.pO7, this.pO7Size[0], this.pO7Size[1], sSize);
             case "ID_SPR_FIRE":
                 return new EntitySprite(this.pO8, this.pO8Size[0], this.pO8Size[1], sSize);
-            // DEF:
+            
+                // DEF:
             case "ID_ELE_WHIP":
                 return new EntitySprite(this.pT1, this.pT1Size[0], this.pT1Size[1], sSize);
             case "ID_ELE_FLASK":
@@ -274,6 +279,7 @@ class SpriteController{
                 return new EntitySprite(this.pT8, this.pT8Size[0], this.pT8Size[1], sSize);
             case "ID_ELE_SKY":
                 return new EntitySprite(this.pT7, this.pT7Size[0], this.pT7Size[1], sSize);
+                
                 // UPGRADE:
             case "ID_SPR_UPGRADE":
                 return new EntitySprite(this.pUp, this.pUpSize[0], this.pUpSize[1], sSize);
