@@ -225,6 +225,16 @@ export class SpriteController{
                     0,1,0,0,0,0,1,0,0,0,1,1,1,0,1,0,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]
         this.pT3Size = [16,16];
+        
+        this.pT7 = [0,1,1,1,1,1,0,0,
+                    0,0,1,1,1,0,0,0,
+                    0,0,0,1,1,1,0,0,
+                    0,0,0,0,1,1,1,0,
+                    0,1,1,1,1,1,1,0,
+                    0,0,1,1,1,0,0,0,
+                    0,0,0,1,1,1,0,0,
+                    0,0,0,0,1,1,1,0];
+        this.pT7Size = [8,8];
 
         this.pT8 = [0,0,0,0,1,0,0,0,
                     1,0,0,1,1,0,1,0,
@@ -264,7 +274,9 @@ export class SpriteController{
                 return new EntitySprite(this.pT3, this.pT3Size[0], this.pT3Size[1], sSize);
             case "ID_ELE_FIRE":
                 return new EntitySprite(this.pT8, this.pT8Size[0], this.pT8Size[1], sSize);
-            // UPGRADE:
+            case "ID_ELE_SKY":
+                return new EntitySprite(this.pT7, this.pT7Size[0], this.pT7Size[1], sSize);
+                // UPGRADE:
             case "ID_SPR_UPGRADE":
                 return new EntitySprite(this.pUp, this.pUpSize[0], this.pUpSize[1], sSize);
         }

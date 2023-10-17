@@ -481,7 +481,7 @@ class SkyContainer extends ObjectProjectile{
             this._pRadius = 0.4;
             this._opDuration = 2000;
 
-            this._pVis = new SpriteController().getSpriteObject("ID_ELE_FIRE",0.01);
+            this._pVis = new SpriteController().getSpriteObject("ID_ELE_SKY",0.01);
 
             this._pVis.setProperty("pOffset", [this._skyPos[0],this._skyPos[1],0.0]);
             this._pVis.setProperty("pColor",[0.9176 + (1-0.9176),0.3843 + (0.7215-0.3843),0.3843 + (0.4745-0.3843),1.0]);
