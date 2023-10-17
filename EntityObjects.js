@@ -1,8 +1,3 @@
-import { BulletSpawner } from "./BulletController.js";
-import { EntityOutLine, EntityRegularPoligon, EntitySprite } from "./GameEngine.js"
-import { PlayerController } from "./MecanicObjects.js";
-import { SpriteController } from "./SpriteController.js";
-
 class BaseEntity{
     constructor(ge, IPos, IRealVect, IApunVect, IVis, ITopVel, ITurnVel){
         this._gameEngine = ge;
@@ -29,7 +24,7 @@ class BaseEntity{
     }
 }
 
-export class Player extends BaseEntity{
+class Player extends BaseEntity{
     constructor(gm){
         let _sPS = 0.01
         super(gm,[0,0,0], [0,0], [0,0],
@@ -112,7 +107,7 @@ export class Player extends BaseEntity{
     }
 }
 
-export class Point{
+class Point{
     constructor(ge, player,sPos){
         this._gameEngine = ge;
         this._pPlayer = player;
@@ -174,7 +169,7 @@ export class Point{
     }
 }
 
-export class Enemy extends BaseEntity{
+class Enemy extends BaseEntity{
     constructor(ge, player, life, type, pos = undefined){
         let tPos = pos != undefined ? pos : [Math.random()*2 - 1,Math.random()*2 - 1,0] 
         let _sPS = 0.01
@@ -252,7 +247,7 @@ export class Enemy extends BaseEntity{
  * @param {Array} vect - Vector a normalitzar
  * Normalitza per referencia per evitar assignaments i creació de variables en cada cicle.
  */
-export function normalizeVector(vect){
+function normalizeVector(vect){
     const mag = Math.sqrt(vect[0]*vect[0] + vect[1]*vect[1]);
     if(mag != 0){
         vect[0] /= mag;

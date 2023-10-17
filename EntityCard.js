@@ -1,7 +1,4 @@
-import { EntityLineStrip, EntityOutLine, EntitySprite } from "./GameEngine.js";
-import { SpriteController } from "./SpriteController.js";
-
-export class Card{
+class Card{
     constructor(gm, i, objDisplay){
         this._cPos = [0.0,0.0,0.0];
 

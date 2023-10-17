@@ -1,6 +1,3 @@
-import { Enemy, Player, Point } from "./EntityObjects.js";
-import { GameScreen } from "./GameEngine.js";
-import { CardSelector, HordeSpawner, InputManager, LifeCounter, PointCounter, ShowTextGUI, Timer } from "./MecanicObjects.js";
 class GameManager{
     constructor(){
         this._gameScreen = new GameScreen(); 

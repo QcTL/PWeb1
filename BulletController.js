@@ -1,8 +1,4 @@
-import { normalizeVector } from "./EntityObjects.js";
-import { EntityLineStrip, EntityRegularPoligon, EntitySprite } from "./GameEngine.js";
-import { SpriteController } from "./SpriteController.js";
-
-export class BulletSpawner{
+class BulletSpawner{
     constructor(parent, gm){
         this._bsIsShooting = true;
         this._bsGameManager = gm;

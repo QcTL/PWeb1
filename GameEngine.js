@@ -1,4 +1,4 @@
-export class GameScreen{
+class GameScreen{
 
     _getWebGLContext(){
         var canvas = document.getElementById("gCanvas");
@@ -129,7 +129,7 @@ class EntityProperties{
     
 }
 
-export class EntitySprite extends EntityProperties{
+class EntitySprite extends EntityProperties{
     constructor(cVertexPoints, height, width,sizeP = 0.05, properties = null){
         super(properties)
         this.rVertices = [];
@@ -192,7 +192,7 @@ export class EntitySprite extends EntityProperties{
     }
 }
 
-export class EntityOutLine extends EntityProperties{
+class EntityOutLine extends EntityProperties{
     // El input arrar cTotalVertices es comporta com un gl.LINES, agafant les linies (i,i+1), (i+2,i+3), ...
     constructor(cTotalVertices, width, properties = null){
         super(properties)
@@ -258,7 +258,7 @@ export class EntityOutLine extends EntityProperties{
     }
 }
 
-export class EntityRegularPoligon extends EntityProperties{
+class EntityRegularPoligon extends EntityProperties{
     constructor(nSides, radius, properties = null){
         super(properties)
         this._pNSides = nSides;
@@ -298,7 +298,7 @@ export class EntityRegularPoligon extends EntityProperties{
     }
 }
 
-export class EntityLineStrip extends EntityProperties{
+class EntityLineStrip extends EntityProperties{
     constructor(lPointsPositions, properties = null){
         super(properties)
         this._lPoints = lPointsPositions;

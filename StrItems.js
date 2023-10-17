@@ -143,5 +143,3 @@ const dataArray = [
         listPrereq: [7] 
     }
 ];
-
-export {dataArray};

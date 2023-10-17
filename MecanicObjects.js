@@ -1,7 +1,4 @@
-import { Card } from "./EntityCard.js";
-import { dataArray } from "./StrItems.js";
-
-export class HordeSpawner{
+class HordeSpawner{
     constructor(gm, player, distanceK){
         this._hsDistK = distanceK;
         this._hsPlayer = player; 
@@ -90,7 +87,7 @@ function randomDeciInterval(min, max){
     return Math.random()* (max - min) + min;
 }
 
-export class PointCounter{
+class PointCounter{
     constructor(gm,lvlProg) {
         this._lvlProg = lvlProg;
         this._pcGameManager = gm;
@@ -119,7 +116,7 @@ export class PointCounter{
     }
 }
 
-export class Timer{
+class Timer{
     constructor(gm, tSeconds) {
         this._tGameManager = gm;
         this._tTotalSeconds = tSeconds;
@@ -163,7 +160,7 @@ export class Timer{
       }  
 }
 
-export class ShowTextGUI{
+class ShowTextGUI{
     constructor(gm,txt, pos, size) {
         this._pcGameManager = gm;
         this._pcCanvas = document.querySelector("#gCanvasText");
@@ -186,7 +183,7 @@ export class ShowTextGUI{
     }
 }
 
-export class LifeCounter{
+class LifeCounter{
     constructor(gm) {
         this._pcGameManager = gm;
         this._pcCanvas = document.querySelector("#gCanvasText");
@@ -208,7 +205,7 @@ export class LifeCounter{
     }
 }
 
-export class CardSelector{
+class CardSelector{
     constructor(gm) {
         this._csGameManager = gm;
 
@@ -320,12 +317,12 @@ export class CardSelector{
 }
 
 /* INPUT MANAGER */
-export const TYPES_INPUT = {
+const TYPES_INPUT = {
     CHAR_CONTROLLER: 'charController',
     CARD_SELECTOR: 'cardSelector',
 };
 
-export class InputManager{
+class InputManager{
 
     constructor(gm, pController, cController){
         this._imCurrentInput = TYPES_INPUT.CHAR_CONTROLLER;
@@ -353,7 +350,7 @@ export class InputManager{
 
 }
 
-export class CardController{
+class CardController{
     constructor(parent){
         this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");
@@ -386,7 +383,7 @@ export class CardController{
     }
 }
 
-export class PlayerController{
+class PlayerController{
     constructor(parent){
         this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");

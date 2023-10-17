@@ -1,6 +1,4 @@
-import { EntitySprite } from "./GameEngine.js";
-
-export class SpriteController{
+class SpriteController{
     constructor(){
         if(typeof SpriteController.instance === "object"){
             return SpriteController.instance;
