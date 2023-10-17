@@ -50,13 +50,15 @@ class HordeSpawner{
 
     recursiveSpawning(){
         for(let i = 0; i < this._hsLevelProgression[this._hsDiffLevel]._hsNSpawn; i += 1){
-            if(!this._hsPause)
+            if(!this._hsPause){
                 this.spawnEnemy(this._hsLevelProgression[this._hsDiffLevel]._hsTypeEnemy,this._hsLevelProgression[this._hsDiffLevel]._hsLife);
                 this._hsDiffLevelList[this._hsDiffLevel] -= 1;
                 if(this._hsDiffLevelList[this._hsDiffLevel] < 0){
-                    this._hsDiffLevel += 1;
-                } 
+                    this._hsDif
+                    fLevel += 1;
+                }
             }
+        }
         if(this._hsWhileSpawning)
             setTimeout(()=> this.recursiveSpawning(),this._hsLevelProgression[this._hsDiffLevel]._hsSpawnRate);
     }
