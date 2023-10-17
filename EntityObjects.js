@@ -76,10 +76,6 @@ class Player extends BaseEntity{
     }
     //END LIFE
 
-    addPoint(){
-        //A
-    }
-
     getRealVect(){
         return this._pRealVect;
     }
@@ -92,11 +88,7 @@ class Player extends BaseEntity{
         
         this._pApunVect[0] = this._pMousePos[0] - this._pPos[0];
         this._pApunVect[1] = this._pMousePos[1] - this._pPos[1];
-        /*this._pCurVel = 
-            Math.min(
-                (this._pApunVect[0] * this._pApunVect[0] + this._pApunVect[1] * this._pApunVect[1])/ 10 + 0.0001,
-                this._pTopVel);  
-        */
+
         this._pCurVel = (this._pApunVect[0] * this._pApunVect[0] + this._pApunVect[1] * this._pApunVect[1]) > 0.0005?
                 this._pTopVel : 0;
 
@@ -151,7 +143,6 @@ class Point{
     update(){
         let d = this.distPlayer();
         if(d < 0.001){
-            this._pPlayer.addPoint();
             this.destroy();
         }else if(d < 0.1){
             this._pPos[0] += this._pRealVect[0] * this._pVel;

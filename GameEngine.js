@@ -1,3 +1,13 @@
+// Aquest arxiu correspon a la defincio de la classe per renderitzar elements per pantalla i el subgrup de classes que són aptes d'apareixer per pantalla.
+    // Elements que poden pareixer per pantalla:
+    // EntitySprite
+    // EntityOutLine
+    // EntityRegularPoligon
+    // EntityLineStrip
+
+/**
+ * Render Engine principal
+ */
 class GameScreen{
 
     _getWebGLContext(){
@@ -129,6 +139,13 @@ class EntityProperties{
     
 }
 
+/**
+ * EntitySprite, mostrarà donada una matriu un element format per pixels a la posicio dondada per la matriu
+ * @param {Array} cVertexPoints - Matriu definida en una sola array que defineix l'objecte a mostrar
+ * @param {Int} height - El nombre de files que hi havia definit amb punts en l'array "cVertexPoints"
+ * @param {Int} width - El nombre de columnes que hi havia definit amb punts en l'array "cVertexPoints"
+ * @param {Double} sizeP - La mida de cada bloc minim de l'objecte.
+ */
 class EntitySprite extends EntityProperties{
     constructor(cVertexPoints, height, width,sizeP = 0.05, properties = null){
         super(properties)
@@ -192,6 +209,11 @@ class EntitySprite extends EntityProperties{
     }
 }
 
+/**
+ * EntityOutLine, mostrarà donada una array d'array de punts una linia com a LINES però poguent agafar el valor de width que es vulgi.
+ * @param {Array} cTotalVertices - Array de Arrays dels punts que es vol ajuntar per fer una linia.
+ * @param {Int} width - Mida, en amplada, de la linia a generar.
+ */
 class EntityOutLine extends EntityProperties{
     // El input arrar cTotalVertices es comporta com un gl.LINES, agafant les linies (i,i+1), (i+2,i+3), ...
     constructor(cTotalVertices, width, properties = null){
@@ -258,6 +280,11 @@ class EntityOutLine extends EntityProperties{
     }
 }
 
+/**
+ * EntityRegularPoligon, generara un poligon regular n-essim.
+ * @param {Int} nSides - Nombre de costats del poligon regular generat
+ * @param {Double} radius - Mida del poligon que es mostrarà
+ */
 class EntityRegularPoligon extends EntityProperties{
     constructor(nSides, radius, properties = null){
         super(properties)
@@ -298,6 +325,10 @@ class EntityRegularPoligon extends EntityProperties{
     }
 }
 
+/**
+ * EntityLineStrip, una capa externa per mostrar LINE_STRIP en GameScreen
+ * @param {Array} lPointsPositions - Nombre de punts que es voldra que es conecti amb una linia
+ */
 class EntityLineStrip extends EntityProperties{
     constructor(lPointsPositions, properties = null){
         super(properties)

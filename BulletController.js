@@ -1,21 +1,32 @@
+/**
+ * @param {Player} parent - El objecte que disparara els projectils, en aquest cas el jugador
+ * @param {GameManager} gm - El GameManager actiu que s'esta mostrant en pantalla
+ */
 class BulletSpawner{
     constructor(parent, gm){
         this._bsIsShooting = true;
         this._bsGameManager = gm;
         this._bsPlayer = parent;
+
+        //El valor de pausa que se li donara per poder deixar de generar projectils
         this._bsPause = false;
 
+        // Llista dels containers que contenen la informacio necessaria per generar un projectil
         this._bsListProjectiles = [ new BulletContainer(gm, parent)];
+        // El valor de les id de la llista anterior.
         this._bsListProjectilesId = [0];
     }
 
     start(){
+        // Començament del bucle recursiu per els projectius associats en l'inici
         this._bsListProjectiles.forEach(x => this.recursiveShooting(x));
     }
 
     addObject(objSpawner){
         var objElement = undefined
         if(objSpawner.type == 'PROJECTILE'){
+            //A causa que ens retornarant un objecte de classe StrItems, aquest no te la informacio de com generar, per aixo cada projectil te associat un container
+            //En el seguent switch assosiarem els diversos id dels objectes que tenim a StrItems a Objectes JS XXXXContainer.
             switch(objSpawner.id){
                 case 0:
                     objElement = new BulletContainer(this._bsGameManager,this._bsPlayer);
@@ -33,6 +44,8 @@ class BulletSpawner{
                     objElement = new FireStickContainer(this._bsGameManager,this._bsPlayer);
                 break;
             }
+
+            //Un cop afeguits, començarem la seva execucio recursiva.
             this._bsListProjectilesId.push(objSpawner.id);
             this._bsListProjectiles.push(objElement);
             this.recursiveShooting(objElement);
@@ -43,6 +56,8 @@ class BulletSpawner{
     }
 
     applyUpgrade(obj, container){
+        // L'altre cas es que sigui un objecte de millora de un projectil, per aixo tenim la llista de indexs, simplement aconseguim el container
+        // donat el id i canviem els seus valors.
         switch(obj.upgradeElement.valueToIncrement){
             case 'duration':
                 container.changeDuration(obj.upgradeElement.increment);
@@ -64,10 +79,16 @@ class BulletSpawner{
         this._bsPause = v;
     }
 
+    /**
+     * 
+     * @param {Container} proj - Projectil que s'esta executant en aquell moment 
+     */
     recursiveShooting(proj){
+        // Si no esta en pausa, i pot disparar el projectil, crida la funcio del container que generara un projectil i l'afeguira a GameEngine.
         if(!this._bsPause && proj.canSpawn())
             this.shootEnemy(proj);
     
+        //Crida recursiva temporal
         if(this._bsIsShooting)
             setTimeout(()=> this.recursiveShooting(proj),proj.getFreq());
     }
@@ -181,10 +202,12 @@ class FlaskContainer extends ObjectProjectile{
             this._pVis.setProperty("pOffset", [this._opCPoint[0],this._opCPoint[1],0.0]);
             this._pVis.setProperty("pColor",[1,0.7215,0.4745,1.0]);
             
+            //Temps abans de desapareixer
             this._wiTimeToDespawn = false;
             setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
         }
 
+        // Funcio per generar el foc en un punt aleatori al voltant del personatge.
         _generateRandomPointInCircle(posP , f) {
             const angle = Math.random() * 2 * Math.PI;
             const randomRadius = Math.sqrt(Math.random()) * f;
@@ -239,6 +262,9 @@ class WhipContainer extends ObjectProjectile{
 
             this._pPos = this._iopPlayer.getPos();
             this._wiTimeToDespawn = false;
+
+            // Aquest objecte canviara de direccio en mitat de la seva execucio, aixi que tindrem un 
+            // temportizador per aquest canvi i per el fet de desapareixer.
             this._isFlip = false;
             setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
             setTimeout(()=> this._isFlip = true,this._opDuration/2);
@@ -308,11 +334,10 @@ class BulletContainer extends ObjectProjectile{
             enemy.setPursued();
         }
         
-        //Directament a enemic
+        //Directament a enemic que ha estat assigant en la seva execucio.
         update(){
             this._pDir[0] = this._pEnemy.getPos()[0] - this._pPos[0];
             this._pDir[1] = this._pEnemy.getPos()[1] - this._pPos[1];
-            // ? this._pEnemy.destroy() : none;
             
             if((this._pDir[0]*this._pDir[0] + this._pDir[1]*this._pDir[1]) < 0.01){
                 this._pEnemy.removePointLife(1);
@@ -344,30 +369,32 @@ class FireStickContainer extends ObjectProjectile{
 
     shoot(){
         //Angle Inicial
-        const rA = Math.random() * 2 * Math.PI; 
+        const rA = Math.random() * 2 * Math.PI;
+        // Si es dispara més d'un a la vegada, que tots surtin amb un angle lleugerament different.
+        // El angle estara representat amb vectors unitaris per poder fer més senzill el seu calcul.
         var r = this._generateUnitaryVectors(0.2,[Math.cos(rA),Math.sin(rA)], this._opQuant);
         r.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)));
     }
 
     _generateUnitaryVectors(thetaOffset, thetaStart, numProjectiles) {
-        // Calculate the increment angle between projectiles
+        // Calcular el increment de l'angle que ha de tenir cada objecte
         const incrementAngle = (2 * thetaOffset) / (numProjectiles - 1);
       
         // Calculate the rotation matrix based on the normalized start vector
+        // Calcular la matriu de rotacio que se li assignara a cada objecte.
         const rotationMatrix = [
           [Math.cos(incrementAngle), -Math.sin(incrementAngle)],
           [Math.sin(incrementAngle), Math.cos(incrementAngle)]
         ];
-      
-        // Initialize an array to store the unitary vectors
+    
         const unitaryVectors = [];
       
-        // Calculate the initial vector based on the normalized start vector
+        // Angle inicial al qual tot estara "offset"
         let currentVector = thetaStart;
       
         for (let i = 0; i < numProjectiles; i++) {
           unitaryVectors.push(currentVector);
-          // Rotate the current vector for the next projectile
+          // Calcul de rotacio de cada un dels projectils.
           const x = currentVector[0] * rotationMatrix[0][0] + currentVector[1] * rotationMatrix[0][1];
           const y = currentVector[0] * rotationMatrix[1][0] + currentVector[1] * rotationMatrix[1][1];
           currentVector = [x, y];
@@ -423,6 +450,7 @@ class FireStickContainer extends ObjectProjectile{
             this._fsActiveFrames += 10;
             
             const prog = this._fsActiveFrames / this._opDuration;
+            //Canvi del color del foc de forma linial entre dos valors preseleccionats.
             this._pVis.setProperty("pColor",[0.9176 + (1-0.9176) * prog,0.3843 + (0.7215-0.3843) * prog,0.3843 + (0.4745-0.3843) * prog,1.0]);
 
 
@@ -514,6 +542,13 @@ class SkyContainer extends ObjectProjectile{
     }
 }
 
+/**
+ * Retorn el enemic més proxim a la bala disparada.
+ * @param {GameEngine} gm 
+ * @param {BulletContainer} b 
+ * @returns {Enemy}
+ */
 function closestEnemy(gm, b){
     return gm.getClosestEnemy(b);
 }
+// Per ara aquesta funció només l'utilitza la Bullet.

@@ -1,3 +1,10 @@
+
+/**
+ * Objecte per fer apareixer els enemics al voltant del jugador
+ * @param {GameManager} gm - GameManager actiu en el canvas WebGL
+ * @param {Player} player -  Player, jugador actiu en el GameManager assignat
+ * @param {Double} distanceK - Distancia a la que es vol que aparegin els enemics del jugador.
+ */
 class HordeSpawner{
     constructor(gm, player, distanceK){
         this._hsDistK = distanceK;
@@ -89,6 +96,11 @@ function randomDeciInterval(min, max){
     return Math.random()* (max - min) + min;
 }
 
+/**
+ * Objecte per mostrar el valor de la puntuacio en el canvas superior.
+ * @param {GameManager} gm - GameManager actiu en el canvas WebGL
+ * @param {Array} lvlProg - Llista de punts necessaris per abançar al seguent nivell
+ */
 class PointCounter{
     constructor(gm,lvlProg) {
         this._lvlProg = lvlProg;
@@ -118,6 +130,11 @@ class PointCounter{
     }
 }
 
+/**
+ * Objecte per mostrar el valor del temps en el canvas superior.
+ * @param {GameManager} gm - GameManager actiu en el canvas WebGL.
+ * @param {Int} tSeconds - Valor en segons amb el que començarà el contador
+ */
 class Timer{
     constructor(gm, tSeconds) {
         this._tGameManager = gm;
@@ -162,6 +179,13 @@ class Timer{
       }  
 }
 
+/**
+ * Objecte per mostrar el valor de la vida en el canvas superior.
+ * @param {GameManager} gm - GameManager actiu en el canvas WebGL.
+ * @param {String} txt - El text que vols que es mostri per pantalla
+ * @param {Array} pos - La posicio on es vol que es mostri
+ * @param {Array} size - La mida que tindra el objecte perque pugi ser eliminat de la pantalla sense afectar els altres textos.
+ */
 class ShowTextGUI{
     constructor(gm,txt, pos, size) {
         this._pcGameManager = gm;
@@ -183,8 +207,12 @@ class ShowTextGUI{
         this._pcValue = v;
         this.showPoints();
     }
-}
 
+}
+/**
+ * Objecte per mostrar el valor de la vida en el canvas superior.
+ * @param {GameManager} gm - GameManager actiu en el canvas WebGL.
+ */
 class LifeCounter{
     constructor(gm) {
         this._pcGameManager = gm;
@@ -206,7 +234,11 @@ class LifeCounter{
         this.showPoints();
     }
 }
-
+/**
+ * 
+ * Objecte per mostrar les 3 cartes quant sigui necessari
+ * @param {GameManager} gm - GameManager actiu en el canvas WebGL.
+ */
 class CardSelector{
     constructor(gm) {
         this._csGameManager = gm;
@@ -228,6 +260,9 @@ class CardSelector{
         this._csMousePosition = [0.0,0.0];
     }
 
+     /**
+     * @return {Objecte Item} - Retorna un objecte valid de la llista this._csPossObjects
+     */
     selectOneRandomValidObject(){
         var isValid = false;
         while(!isValid){
@@ -249,6 +284,11 @@ class CardSelector{
         }
     }
 
+    /**
+     * Funcio per escollir un element aleatori
+     * @param {Array} array - Donda una array qualsevol 
+     * @returns {*} - Retorna una posicio aleatoria de la array entrada
+     */
     _getRandomElementFromArray(array) {
         if (array.length === 0) {
           return null;  // Return null for an empty array
@@ -257,14 +297,28 @@ class CardSelector{
         return array[randomIndex];
     }
 
+    // GETTER I SETTERS
+
+    
+     /**
+     * @return {CardController} - Retorna el CardController assignat a la CardSelector
+     */
     getController(){
         return this._csCardController;
     }
 
+     /**
+     * Funcio cridada per el CardController quant es mou el ratoli
+     * @param {Array} v - Vector de dos posicions representant la posicio transformada WebGL del moviment
+     */
     setMousePos(v){
         this._csMousePosition = v;
     }
 
+     /**
+     * Funcio cridada per el CardController quant es prem per pantalla
+     * @param {Array} v - Vector de dos posicions representant la posicio transformada WebGL del click
+     */
     setClickPos(v){
         this._csActiveCard = this._csListCards.find(x=> x.isPointInside(v));
         this._csGameManager.addActiveObject(this._csActiveCard.getActiveObject());
@@ -282,23 +336,36 @@ class CardSelector{
             x.setNewActiveObject(obj);
         });
     }
-
+    // END GETTER I SETTERS
+    
+    /**
+     * Mostra els objectes afeguint els seus diversos components al GameEngine per poder ser mostrats per pantalla
+     * @param {GameEngine} gs - La GameEngine utilitzada en la que es mostrara els objectes 
+     */
     displayCards(gs){
         this._csListCards.forEach(
             x => {
-                this._csListTickets.push(gs.addElement(x.getVisBack()));
-                this._csListTickets.push(gs.addElement(x.getVisCont()));
-                this._csListTickets.push(gs.addElement(x.getVisSprite()));
+                this._csListTickets.push(gs.addElement(x.getVisBack())); //El fons de la carta
+                this._csListTickets.push(gs.addElement(x.getVisCont())); //El contorn que pot tenir diferent color depenent si es una nova havilitat o una millora
+                this._csListTickets.push(gs.addElement(x.getVisSprite())); //El sprite, siguent l'havilitat o el icone de millora
             });
         this._csIsActive = true; 
     }
 
+    /**
+     * Elimina les cartes de la GameEngine donada. Segons el sistema de tiquets explicat.
+     * @param {GameEngine} gs - La GameEngine utilitzada en la que l'eliminaran els objectes, han de estar-hi presents per poder-se eliminar. 
+     */
     removeCards(gs){
         this._csListTickets.forEach(x => gs.removeElement(x));
         this._csIsActive = false; 
         this._csListCards.forEach(x=> x.clearText());
     }
 
+    /**
+     * Funcio d'actualitzacio de cada frame de l'objecte. En aquest cas simplement cridara el update de cada carta i notificara si te el cursor sobre per
+     * poder tenir una animaci.
+     */
     update(){
         if(this._csIsActive){
             //Animacio Carta:
@@ -336,6 +403,10 @@ class InputManager{
         this.askSwapInputManager(TYPES_INPUT.CHAR_CONTROLLER)
     }
 
+    /**
+     * Canvia el estat dels Inputs Managers, de CHAR_CONTROLER a CHAR_SELECTOR
+     * @param {String} newType - Un dels string id continguts a l'objecte TYPES_INPUT, al qual vols canviar
+     */
     askSwapInputManager(newType){
         if(newType == TYPES_INPUT.CHAR_CONTROLLER || newType == TypeError.CARD_SELECTOR){
             this._imCurrentInput = newType;
@@ -354,6 +425,7 @@ class InputManager{
 
 class CardController{
     constructor(parent){
+        // Canvas superior, el que conte els elements de text, pero a causa que esta per sobre ell serà el que consumeix els events de moviment i de "click".
         this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");
         this.gParent = parent;
@@ -362,14 +434,23 @@ class CardController{
         this.gCanvas.addEventListener('click', this.mouseClicked.bind(this));
     }
 
+    /**
+     * Desactiva el Controlador de les cartes
+     */
     turnOffController(){
         this.gActive = false;
     }
 
+    /**
+     * Activa el Controlador de les cartes
+     */
     turnOnController(){
         this.gActive = true;
     }
 
+   /**
+     * Event cridat per el DOM quant el ratoli es mou
+     */
     mouseMoved(event){
         if(this.gActive){
             const rectGCanvas = this.gCanvas.getBoundingClientRect();
@@ -377,6 +458,9 @@ class CardController{
         }
     }
 
+    /**
+     * Event cridat per el DOM quant el ratoli prem un boto
+     */
     mouseClicked(event) {
         if(this.gActive){
             const rectGCanvas = this.gCanvas.getBoundingClientRect();
@@ -387,6 +471,7 @@ class CardController{
 
 class PlayerController{
     constructor(parent){
+        // Canvas superior, el que conte els elements de text, pero a causa que esta per sobre ell serà el que consumeix els events de moviment i de "click".
         this.gCanvas = document.getElementById("gCanvasText");
         const ctx = this.gCanvas.getContext("2d");
         this.gParent = parent;
@@ -394,14 +479,23 @@ class PlayerController{
         this.gCanvas.addEventListener('mousemove', this.mouseMoved.bind(this));
     }
 
+    /**
+     * Desactiva el Controlador del personatge
+     */
     turnOffController(){
         this.gActive = false;
     }
 
+    /**
+     * Activa el Controlador del personatge
+     */
     turnOnController(){
         this.gActive = true;
     }
 
+    /**
+     * Event cridat per el DOM quant el ratoli es mou
+     */
     mouseMoved(event){
         if(this.gActive){
             const rectGCanvas = this.gCanvas.getBoundingClientRect();
