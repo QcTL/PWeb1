@@ -30,6 +30,9 @@ export class BulletSpawner{
                 case 3:
                     objElement = new FlaskContainer(this._bsGameManager,this._bsPlayer);
                 break;
+                case 7:
+                    objElement = new SkyContainer(this._bsGameManager, this._bsPlayer);
+                break;
                 case 8:
                     objElement = new FireStickContainer(this._bsGameManager,this._bsPlayer);
                 break;
@@ -434,6 +437,86 @@ class FireStickContainer extends ObjectProjectile{
     }
 }
 
+class SkyContainer extends ObjectProjectile{
+    constructor(gm, player){
+        super(gm,player);
+        
+        //CANVIAR PER ACTUALITZAR ELS VALORS
+        this._opFreq = 4000;
+        this._opQuant = 1;
+    }
+
+    canSpawn(){
+        return true;
+    }
+
+    shoot(){
+        //Angle Inicial, Separats 
+        const rA = Array.from({ length: this._opQuant }, (_, i) => (2 * Math.PI * i) / this._opQuant);
+        console.log(rA);
+        rA.forEach(x => this._gameManager.addElementBullet(this.getInstance(x)));
+        //this._gameManager.addElementBullet(this.getInstance(sAngle));
+    }
+
+    getInstance(sAngle){
+        var b = new this.SkyInst(this._gameManager, this._opPlayer, sAngle);
+        return b;
+    }
+
+    SkyInst = class SkyOrbitalInst extends InstObjectProjectile{
+        constructor(gm,player, sAngle){
+            super(gm,player);
+            this._pPos = this._iopPlayer.getPos();
+            this._skyPos = [...this._pPos];
+
+            this._skyCollisonRectangle = {
+                x: this._skyPos[0]- 0.01*10/2,
+                y: this._skyPos[1]- 0.01*10/2,
+                width: 0.01*10,
+                height: 0.01*10
+            };
+
+            this._pVel = 0.01;
+            this._pAngle = sAngle;
+            this._pRadius = 0.4;
+            this._opDuration = 2000;
+
+            this._pVis = new SpriteController().getSpriteObject("ID_ELE_FIRE",0.01);
+
+            this._pVis.setProperty("pOffset", [this._skyPos[0],this._skyPos[1],0.0]);
+            this._pVis.setProperty("pColor",[0.9176 + (1-0.9176),0.3843 + (0.7215-0.3843),0.3843 + (0.4745-0.3843),1.0]);
+
+            this._wiTimeToDespawn = false;
+
+            setTimeout(()=> this._wiTimeToDespawn = true,this._opDuration );
+
+            this._fsActiveFrames = 0
+        }
+
+        update(){
+            this._pAngle += this._pVel;
+            this._skyPos[0] = this._pPos[0] + this._pRadius * Math.cos(this._pAngle);
+            this._skyPos[1] = this._pPos[1] + this._pRadius * Math.sin(this._pAngle); 
+            
+            this._skyCollisonRectangle.x = this._skyPos[0]- 0.01*10/2;
+            this._skyCollisonRectangle.y = this._skyPos[1]- 0.01*10/2;
+           
+            var sEnemies = this._gameManager.getListEnemiesArea(this._skyCollisonRectangle);
+            sEnemies.forEach(x => x[1].destroy());
+            
+            this._pVis.setProperty("pOffset", [this._skyPos[0],this._skyPos[1],0.0]);
+            this._fsActiveFrames += 10;
+            
+            const prog = this._fsActiveFrames / this._opDuration;
+            this._pVis.setProperty("pColor",[0.9176 + (1-0.9176) * prog,0.3843 + (0.7215-0.3843) * prog,0.3843 + (0.4745-0.3843) * prog,1.0]);
+
+
+            if(this._wiTimeToDespawn){
+                this.destroy();
+            }
+        }
+    }
+}
 
 function closestEnemy(gm, b){
     return gm.getClosestEnemy(b);

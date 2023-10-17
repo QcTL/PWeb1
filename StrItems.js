@@ -77,7 +77,7 @@ const dataArray = [
     },
     { 
         id: 7, 
-        name: 'Light form above', 
+        name: 'Light from above', 
         description: 'The sky keeps \n calling my name', 
         type: 'PROJECTILE',
         idSprite: 'ID_SPR_LIGHT', 
@@ -128,6 +128,19 @@ const dataArray = [
         },
         idSprite: undefined, 
         listPrereq: [0,6] 
+    },
+    { 
+        id: 12, 
+        name: 'Light from above', 
+        description: '+ Quant \n The thunder \n is getting louder', 
+        type: 'UPGRADE',
+        upgradeElement:  {
+            idToUpgrade: 7,
+            valueToIncrement: "quantity",
+            increment: 2
+        },
+        idSprite: undefined, 
+        listPrereq: [7] 
     }
 ];
 
