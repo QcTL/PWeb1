@@ -64,51 +64,46 @@
       <div class="cInforme">
         <h1>Practica 1 - WebGL</h1>
         <h3>Introducció:</h3>
-        <p>Amb l'objectiu de poder ensenyar els conexiaments apressos en les setmanes d'Introducció
-          amb WebGL, s'ha requerit que es fes un projecte que utilitzes la majoria de components
-          ensenyats a classe.
-          Per fer aquest objectu d'una forma interessant he decidit en plantejar aquesta practica
-          com la de recrear el exitós joc indie Zombie Survivors, a causa que crec que una simplificació
-          d'aquest joc pot ser una bona base per poder ensenyar tots els coneixaments apresoss en classe.
+        <p>Amb l'objectiu de poder ensenyar els coneixements presos en les setmanes d'Introducció amb WebGL, s'ha requerit que es fes un projecte que utilitzes la majoria dels components ensenyats a classe. Per fer aquest objectiu d'una forma interessant he decidit en plantejar aquesta pràctica com la de recrear l'exitós joc indie Zombie Survivors, a causa que crec que una simplificació d'aquest joc pot ser una bona base per poder ensenyar tots els coneixements apresos en classe.
         </p>
         <h3>Controls:</h3>
         <p>
           <b>Disparar: Automatic</b><br />
-          <b>Moviemnt: Ratolí</b><br />
+          <b>Moviment: Ratolí</b><br />
           <b>Pausa: "P"</b><br />
           <b>Carta: Selecciona i prem</b><br />
           <br />
-          En aquest joc controles el personantge amb el ratolí, utilitzant la transformació de obtenir el
-          retoli en la possició web i utilitzar transformacións perque els cordenades estiguin en el sistema
+          En aquest joc controles el personatge amb el ratolí, utilitzant la transformació d'obtenir el
+          retoli en la posició web i utilitzar transformacions perquè les coordenades estiguin en el sistema
           del canvas on hi ha els elements del WebGL.
-          El jugador dispararà de manera automatica donades les teves estadistiques.
+          El jugador dispararà de manera automàtica donades les teves estadístiques.
         </p>
         <h3>Objectiu:</h3>
         <p>
-          Hauras de derrotat totes les hordes de monstres que probenen de les cantonades del joc, tant
-          els monstres com tú estan representats amb un "pixel-art", però a causa que el WebGL no
+          Hauràs de derrotar totes les hordes de monstres que provenen de les cantonades del joc, tant
+          els monstres com tu estan representats amb un "pixel-art", però a causa que el WebGL no
           treballa directament amb quadrats, el que es fa és representar cada quadrat amb dos triangles,
-          però si es fés això cada personatge utilitzaria molts recursos, per això el que es fà es que si hi ha
-          una regio rectangular de pixels s'agruparant per només utilitzar 2 poligons.
-          Les bales, estàn representades amb cercle, que tampoc és un element basic que dona WebGL, per això
-          es va fer una funció que intenta donar els vertex necessaris per generar un cercle, per això
-          un dels parametres serà amb quants vertex vols aproximar el cercle, on 3 seria un triangle, 4 seria un quadrat,
-          i aixì continuament fins obtenir un poligon regular que amb la mida sigui percebut com un cercle.
+          però si es fes això cada personatge utilitzaria molts recursos, per això el que es fa és que sí que hi ha
+          una regió rectangular de píxels s'agruparan per només utilitzar 2 polígons.
+          Les bales estan representades amb cercle, que tampoc és un element bàsic que dona WebGL, per això
+          es va fer una funció que intenta donar els vèrtexs necessaris per generar un cercle, per això
+          un dels paràmetres serà amb quants vèrtexs vols aproximar el cercle, on 3 seria un triangle, 4 seria un quadrat,
+          i així contínuament fins a obtenir un polígon regular que amb la mida sigui percebut com un cercle.
         </p>
         <h3>Objectes:</h3>
-        <p> <b>Fire Potion:</b> Aleatoriament tira pocions en el terra deixant foc que crema els enemics que passin per sobre</p>
-        <p> <b>Whip:</b> Un fuet que ataca de per etapes, la primera elimina els enemic en propera proximitat devant del jugador, i en la segona derrera</p>
-        <p> <b>Magic Wand:</b> Una bareta magica que ataca al enemic més proper</p>
-        <p> <b>Fire Stick:</b> Dispara una bola de foc en una direcció aleatoria que derrota a tothom que se li posi per devant</p>
+        <p> <b>Fire Potion:</b> Aleatòriament tira pocions en el terra deixant foc que crema els enemics que passin per sobre</p>
+        <p> <b>Whip:</b>Un fuet que ataca de per etapes, la primera elimina els enemics en propera proximitat davant del jugador, i en la segona darrera</p>
+        <p> <b>Magic Wand:</b> Una vareta màgica que ataca a l'enemic més proper</p>
+        <p> <b>Fire Stick:</b>Dispara una bola de foc en una direcció aleatòria que derrota a tothom que se li posi per davant</p>
         <p> <b>Light form above:</b> Un projectil que orbita al voltant teu que elimina a tothom a qui toca</p>
-        <h3>Implementacions especifiques:</h3>
+        <h3>Implementacions específiques:</h3>
         <p>
-          A causa que en algun punt poden haver molts elements en pantalla, una aproximació al
-          moviment que es basi en moure el buffer de vertex pot ser molt costosa, degut al alt nombre
-          de operacions que s'haurien de realitzar en cada cicle. Per això es va optar en aquest cas
-          a que cada element tingues el seu vector de posició i que li comuniqués des de la classe
-          logica a la classe que el representa gaficament aquest vector de posició, amb l'objectiu de
-          passar aquest vector a la varible "pOffset" del shader, reduint així el nombre de computacions. 
+          A causa que en algun punt poden haver-hi molts elements en pantalla, una aproximació al
+          moviment que es basi a moure el buffer de vèrtex pot ser molt costosa, a causa de l'alt nombre
+          d'operacions que s'haurien de realitzar en cada cicle. Per això es va optar en aquest cas
+          a què cada element tingués el seu vector de posició i que li comuniqués des de la classe
+          lògica a la classe que el representa gràficament aquest vector de posició, amb l'objectiu de
+          passar aquest vector a la variable "pOffset" del shader, reduint així el nombre de computacions.
         </p>
       </div>
       <div class="iInforme">
